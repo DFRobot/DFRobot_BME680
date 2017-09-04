@@ -1,8 +1,8 @@
-#include "BME680.h"
+#include "DFRobot_BME680.h"
 
 const uint8_t bme_addr = 0x76;  //bme I2C address
 
-BME680 bme(bme_addr);
+DFRobot_BME680 bme(bme_addr);
 
 
 void setup(void) {

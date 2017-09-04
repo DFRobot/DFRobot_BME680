@@ -139,7 +139,7 @@ enum GWaitMult {
 };
 
 
-class BME680 {
+class DFRobot_BME680 {
 	private:
 		uint8_t		I2C_addr;
 		void			writeReg(uint8_t addr, uint8_t dat);
@@ -147,7 +147,7 @@ class BME680 {
 		uint8_t		TT(uint16_t TT);
 		
 	public:
-							BME680(uint8_t addr);
+							DFRobot_BME680(uint8_t addr);
 		boolean		init(void);
 		float			readGas(void);
 		float 		readTempture(void);

@@ -34,13 +34,13 @@ static uint8_t status0, status1, status2;
 //====== Set of useful function to access acceleration. gyroscope, magnetometer, and temperature data
 //===================================================================================================================
 
-BME680::BME680(uint8_t addr) {
+DFRobot_BME680::DFRobot_BME680(uint8_t addr) {
 	
 	this->I2C_addr = addr;
 }
 
 
-boolean BME680::init(void) {
+boolean DFRobot_BME680::init(void) {
 	
 	uint8_t id = 0;
 	Wire.begin();
@@ -102,7 +102,7 @@ boolean BME680::init(void) {
 }
 
 
-void BME680::readReg(uint8_t addr, uint8_t count, uint8_t *pBuf) {
+void DFRobot_BME680::readReg(uint8_t addr, uint8_t count, uint8_t *pBuf) {
 	
 	Wire.beginTransmission(this->I2C_addr);
 	Wire.write(addr);
@@ -116,7 +116,7 @@ void BME680::readReg(uint8_t addr, uint8_t count, uint8_t *pBuf) {
 }
 
 
-void BME680::writeReg(uint8_t addr, uint8_t dat) {
+void DFRobot_BME680::writeReg(uint8_t addr, uint8_t dat) {
 	
 	Wire.beginTransmission(this->I2C_addr);
 	Wire.write(addr);
@@ -125,13 +125,13 @@ void BME680::writeReg(uint8_t addr, uint8_t dat) {
 }
 
 
-void BME680::startConvert(void) {
+void DFRobot_BME680::startConvert(void) {
 	
 	this->writeReg(BME680_CTRL_MEAS, Tosr << 5 | Posr << 2 | Mode);
 }
 
 
-float BME680::readTempture(void) {
+float DFRobot_BME680::readTempture(void) {
 	
 	uint32_t temp = 0;
 	uint8_t rawData[3];  // 20-bit pressure register data stored here
@@ -148,7 +148,7 @@ float BME680::readTempture(void) {
 }
 
 
-float BME680::readHumidity(void) {
+float DFRobot_BME680::readHumidity(void) {
 	
 	uint32_t humidity = 0;
 	uint8_t rawData[3];  // 20-bit pressure register data stored here
@@ -175,7 +175,7 @@ float BME680::readHumidity(void) {
 }
 
 
-float BME680::readPressure(void) {
+float DFRobot_BME680::readPressure(void) {
 	
 	uint32_t pressure = 0;
 	uint8_t rawData[3];  // 20-bit pressure register data stored here
@@ -208,7 +208,7 @@ float BME680::readPressure(void) {
 }
 
 
-float BME680::readGas(void) {
+float DFRobot_BME680::readGas(void) {
 	
 	uint16_t gas = 0;
 	uint8_t rawData[2];  // 10-bit gas resistance register data stored here
@@ -227,7 +227,7 @@ float BME680::readGas(void) {
 
 // Returns register code to be written to register BME680_RES_HEAT_CTRL for a user specified target temperature TT
 // where TT is the target temperature in degrees Celsius
-uint8_t BME680::TT(uint16_t TT) {  //TT is in 200 to 400
+uint8_t DFRobot_BME680::TT(uint16_t TT) {  //TT is in 200 to 400
 
   uint8_t res_heat_x = 0;
   double var1 = 0.0, var2 = 0.0, var3 = 0.0, var4 = 0.0, var5 = 0.0;
