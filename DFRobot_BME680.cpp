@@ -1,4 +1,4 @@
-#include "BME680.h"
+#include "DFRobot_BME680.h"
 
 // Specify BME680 configuration
 static uint8_t Posr = P_OSR_16, Hosr = H_OSR_01, Tosr = T_OSR_02, Mode = Forced, IIRFilter = BW0_042ODR, SBy = t_10ms;     // set pressure amd temperature output data rate
