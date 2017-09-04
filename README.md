@@ -9,7 +9,6 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 * [Installation](#installation)
 * [Methods](#methods)
 
-* [Contributing](#contributing)
 * [History](#history)
 * [Credits](#credits)
 <snippet>
@@ -27,9 +26,9 @@ To use this library download the zip file, uncompress it to a folder named BME68
 
 ```C++
 
-class BME680() {};
+#include <DFRobot_BME680.h>
 
-BME680 bme(I2C_address);
+DFRobot_BME680 bme(I2C_address);
 
 // bme init.
 // Return boolean = init result. if successful, return 1, else return 0
@@ -58,4 +57,4 @@ float BME680::readGas(void)
 
 ## Credits
 
-Written by DFRobot_xiaowo, 2017. (@1003425554@qq.com)
+Written by DFRobot_xiaowo, 2017. (Welcome to our [forum](http://www.dfrobot.com.cn/community/portal.php))
