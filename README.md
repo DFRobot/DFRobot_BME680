@@ -32,22 +32,22 @@ DFRobot_BME680 bme(I2C_address);
 
 // bme init.
 // Return boolean = init result. if successful, return 1, else return 0
-boolean init(void)
+boolean init(void);
 
 //start convert to get a accurate values
-void startConvert(void)
+void startConvert(void);
 
 //Return float = temperature. Unit degree Celsius, this is account to two decimal places
-float readTempture(void)	
+float readTempture(void);	
 
 //Return float = humidity. Unit relative humidity, this is account to two decimal places
-float readHumidity(void)
+float readHumidity(void);
 	
 //Return float = pressure. Unit MPa, this is account to two decimal places
-float readPressure(void)
+float readPressure(void);
 
 //Return float = gas. Unit Ohm, this is account to one decimal places
-float readGas(void)	
+float readGas(void);	
 	
 ```
 	
