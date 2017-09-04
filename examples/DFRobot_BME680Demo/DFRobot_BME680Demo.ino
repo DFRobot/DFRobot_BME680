@@ -22,7 +22,8 @@ void setup(void) {
 
 void loop(void) {
 	
-	float			temp = 0, pressure = 0, humidity = 0, gas = 0;
+	float			temp = 0, pressure = 0, humidity = 0;
+	uint16_t	gas = 0;
   uint8_t		status = 0;
 	
 	delay(1000);
@@ -30,7 +31,7 @@ void loop(void) {
 	temp = bme.readTempture();			//float tempture, unit degree Celsius, this is account to two decimal places
 	pressure = bme.readPressure();	//float pressure, Unit Unit MPa, this is account to two decimal places
 	humidity = bme.readHumidity();	//float humidity, Unit relative humidity, this is account to two decimal places
-	gas = bme.readGas();						//float tempture, Unit Ohm, this is account to one decimal places
+	gas = bme.readGas();						//uint16_t gas, Unit ppm, this is account to one decimal places
 	Serial.println();
 	Serial.print("tempture : ");
 	Serial.print(temp, 2);
@@ -42,7 +43,7 @@ void loop(void) {
 	Serial.print(humidity, 2);
 	Serial.println(" %rh");	
 	Serial.print("gas : ");
-	Serial.print(gas, 1);
-	Serial.println(" Ohm");
+	Serial.print(gas);
+	Serial.println(" ppm");
 }
 

@@ -208,20 +208,20 @@ float DFRobot_BME680::readPressure(void) {
 }
 
 
-float DFRobot_BME680::readGas(void) {
+uint16_t DFRobot_BME680::readGas(void) {
 	
 	uint16_t gas = 0;
 	uint8_t rawData[2];  // 10-bit gas resistance register data stored here
   this->readReg(BME680_FIELD_0_GAS_RL_MSB, 2, &rawData[0]);
   gas = (uint16_t) (((uint16_t) rawData[0] << 2 | (0xC0 & rawData[1]) >> 6) );
 	
-	uint8_t var = 0;
-	readReg(BME680_FIELD_0_GAS_RL_LSB, 1, &var);
-	uint8_t gasRange = var & 0x0F;
-  double var1 = 0, gas_switch_error = 1.0;
-  var1 =  (1340.0 + 5.0 * gas_switch_error) * const_array1[gasRange];
-  float gas_res = var1 * const_array2[gasRange] / (gas - 512.0 + var1);
-  return gas_res;
+	// uint8_t var = 0;
+	// readReg(BME680_FIELD_0_GAS_RL_LSB, 1, &var);
+	// uint8_t gasRange = var & 0x0F;
+  // double var1 = 0, gas_switch_error = 1.0;
+  // var1 =  (1340.0 + 5.0 * gas_switch_error) * const_array1[gasRange];
+  // float gas_res = var1 * const_array2[gasRange] / (gas - 512.0 + var1);
+  return gas;
 }
 
 

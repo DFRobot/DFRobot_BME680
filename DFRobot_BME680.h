@@ -149,7 +149,7 @@ class DFRobot_BME680 {
 	public:
 							DFRobot_BME680(uint8_t addr);
 		boolean		init(void);
-		float			readGas(void);
+		uint16_t	readGas(void);
 		float 		readTempture(void);
 		float 		readPressure(void);
 		float			readHumidity(void);
