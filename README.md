@@ -25,43 +25,33 @@ To use this library download the zip file, uncompress it to a folder named BME68
 
 ## Methods
 
+```C++
 
 class BME680() {};
 
 BME680 bme(I2C_address);
 
+// bme init.
+// Return boolean = init result. if successful, return 1, else return 0
+boolean BME680::init(void)
 
-#### boolean BME680::init(void)
+//start convert to get a accurate values
+void BME680::startConvert(void)
 
-	bme init.
-	Return boolean = init result. if successful, return 1, else return 0
+//Return float = temperature. Unit degree Celsius, this is account to two decimal places
+float BME680::readTempture(void)	
 
+//Return float = humidity. Unit relative humidity, this is account to two decimal places
+float BME680::readHumidity(void)
 	
-#### void BME680::startConvert(void)
+//Return float = pressure. Unit MPa, this is account to two decimal places
+float BME680::readPressure(void)
+
+//Return float = gas. Unit Ohm, this is account to one decimal places
+float BME680::readGas(void)	
 	
-	start convert to get a accurate values
-
-
-#### float BME680::readTempture(void)
+```
 	
-	Return float = temperature. Unit degree Celsius, this is account to two decimal places
-
-
-#### float BME680::readHumidity(void)
-	
-	Return float = humidity. Unit relative humidity, this is account to two decimal places
-	
-
-#### float BME680::readPressure(void)
-
-	Return float = pressure. Unit MPa, this is account to two decimal places
-	
-	
-#### float BME680::readGas(void)
-
-	Return float = gas. Unit Ohm, this is account to one decimal places
-	
-
 ## History
 
 - Sep 4, 2017 - Version 1.0.0 released.
