@@ -68,4 +68,4 @@ BME680 bme(I2C_address);
 
 ## Credits
 
-Written by DFRobot_xiaowo, 2017. (@1003425554@qq.com)
+Welcome to our forum
