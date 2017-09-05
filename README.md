@@ -36,17 +36,20 @@ boolean init(void);
 //start convert to get a accurate values
 void startConvert(void);
 
-//Return float = temperature. Unit degree Celsius, this is account to two decimal places
+//returns the temperature value (unit ℃) from this function
 float readTempture(void);
 
-//Return float = humidity. Unit relative humidity, this is account to two decimal places
+//returns the humidity value (unit %rh) from this function
 float readHumidity(void);
 	
-//Return float = pressure. Unit MPa, this is account to two decimal places
+//returns the pressure value (unit pa) from this function
 float readPressure(void);
 
-//Return float = gas. Unit Ohm, this is account to one decimal places
+//returns the gas value (unit ppm) from this function
 float readGas(void);
+
+//returns the gas altitude (unit meter) from this function (need to read pressure first)
+float readAltitude(void);
 	
 ```
 	
