@@ -29,8 +29,8 @@ Download the zip file first to use this library and uncompress it to a folder na
 
 DFRobot_BME680 bme(I2C_address);
 
-// bme init.
-// Return boolean = init result. if successful, return 1, else return 0
+//Performs the initialisation required by the DFRobot_BME680 library.
+//Return true if initialization succeeds, false otherwise.
 boolean init(void);
 
 //start convert to get a accurate values
