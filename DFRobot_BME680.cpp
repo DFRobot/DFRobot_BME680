@@ -30,9 +30,6 @@ static float   temperature_C, temperature_F, pressure, humidity, altitude, resis
 static uint32_t delt_t = 0, count = 0, sumCount = 0, slpcnt = 0;  // used to control display output rate
 static uint8_t status0, status1, status2;
 
-//===================================================================================================================
-//====== Set of useful function to access acceleration. gyroscope, magnetometer, and temperature data
-//===================================================================================================================
 
 DFRobot_BME680::DFRobot_BME680(uint8_t addr) {
 	
