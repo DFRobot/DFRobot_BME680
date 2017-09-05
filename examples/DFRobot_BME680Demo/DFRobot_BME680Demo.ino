@@ -10,7 +10,7 @@ void setup(void)
 	delay(2000);
 	Serial.begin(115200);
 	while(!Serial);  //wait serial
-	if(bme.init()) {  //if init sucessful, init will return 1, else return 0
+	if(bme.init()) {  //Return true if initialization succeeds, false otherwise
 		Serial.println("init sucessful");
 	} else {
 		Serial.println("init faild");
