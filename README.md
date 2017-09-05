@@ -36,19 +36,19 @@ boolean init(void);
 //start convert to get a accurate values
 void startConvert(void);
 
-//returns the temperature value (unit ℃) from this function
+//read the temperature value (unit ℃)
 float readTempture(void);
 
-//returns the humidity value (unit %rh) from this function
+//read the humidity value (unit %rh)
 float readHumidity(void);
 	
-//returns the pressure value (unit pa) from this function
+//read the pressure value (unit pa)
 float readPressure(void);
 
-//returns the gas value (unit ppm) from this function
+//read the gas value (unit ppm)
 float readGas(void);
 
-//returns the gas altitude (unit meter) from this function (need to read pressure first)
+//read the gas altitude (unit meter) (need to read pressure first)
 float readAltitude(void);
 	
 ```
