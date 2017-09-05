@@ -18,7 +18,8 @@ Reads temperature, humidity, gas and pressure. Calculates altitude and dew point
 
 ## Installation
 
-To use this library download the zip file, uncompress it to a folder named BME680. Move the folder to {Arduino Path}/libraries.
+To use this library download the zip file, uncompress it to a folder named DFRbot_BME680Demo. 
+Download the zip file first to use this library and uncompress it to a folder named DFRbot_BME680Demo. 
 
 ## Methods
 
@@ -55,4 +56,4 @@ float readGas(void);
 
 ## Credits
 
-Written by DFRobot_xiaowo, 2017. (Welcome to our [websit](https://www.dfrobot.com/))
+Written by DFRobot_xiaowo, 2017. (Welcome to our [website](https://www.dfrobot.com/))
