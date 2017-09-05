@@ -5,8 +5,8 @@ const uint8_t bme_addr = 0x76;  //bme I2C address
 DFRobot_BME680 bme(bme_addr);
 
 
-void setup(void) {
-
+void setup(void) 
+{
 	delay(2000);
 	Serial.begin(115200);
 	while(!Serial);  //wait serial
@@ -20,8 +20,8 @@ void setup(void) {
 }
 
 
-void loop(void) {
-	
+void loop(void) 
+{
 	float     temp = 0, pressure = 0, humidity = 0, altitude = 0;
 	uint16_t  gas = 0;
 	uint8_t   status = 0;
