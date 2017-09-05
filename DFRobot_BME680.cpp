@@ -135,16 +135,16 @@ float DFRobot_BME680::readTempture(void) {
 	
 	uint32_t temp = 0;
 	uint8_t rawData[3];  // 20-bit pressure register data stored here
-  this->readReg(BME680_FIELD_0_TEMP_MSB, 3, &rawData[0]);
-  temp = (uint32_t) (((uint32_t) rawData[0] << 16 | (uint32_t) rawData[1] << 8 | rawData[2]) >> 4);
-	
+	this->readReg(BME680_FIELD_0_TEMP_MSB, 3, &rawData[0]);
+	temp = (uint32_t) (((uint32_t) rawData[0] << 16 | (uint32_t) rawData[1] << 8 | rawData[2]) >> 4);
+
 	int32_t var1 = 0, var2 = 0, var3 = 0, T = 0;
-  var1 = ((int32_t) temp >> 3) - ((int32_t)dig_T1 << 1); 
-  var2 = (var1 * (int32_t)dig_T2) >> 11;
-  var3 = ((((var1 >> 1) * (var1 >> 1)) >> 12) * ((int32_t) dig_T3 << 4)) >> 14;
-  t_fine = var2 + var3;
-  T = (t_fine * 5 + 128) >> 8;
-  return (T / 100.);
+	var1 = ((int32_t) temp >> 3) - ((int32_t)dig_T1 << 1); 
+	var2 = (var1 * (int32_t)dig_T2) >> 11;
+	var3 = ((((var1 >> 1) * (var1 >> 1)) >> 12) * ((int32_t) dig_T3 << 4)) >> 14;
+	t_fine = var2 + var3;
+	T = (t_fine * 5 + 128) >> 8;
+	return (T / 100.);
 }
 
 
@@ -152,26 +152,26 @@ float DFRobot_BME680::readHumidity(void) {
 	
 	uint32_t humidity = 0;
 	uint8_t rawData[3];  // 20-bit pressure register data stored here
-  this->readReg(BME680_FIELD_0_HUM_MSB, 2, &rawData[0]);  
-  humidity = (uint16_t) (((uint16_t) rawData[0] << 8 | rawData[1]) );
-	
+	this->readReg(BME680_FIELD_0_HUM_MSB, 2, &rawData[0]);  
+	humidity = (uint16_t) (((uint16_t) rawData[0] << 8 | rawData[1]) );
+
 	int32_t var1 = 0, var2 = 0, var3 = 0, var4 = 0, var5 = 0, var6 = 0, H = 0, T = 0;
-  T = (((int32_t) t_fine * 5) + 128) >> 8;
-  var1 = (int32_t) humidity  - ((int32_t) ((int32_t)dig_H1 << 4)) - (((T * (int32_t) dig_H3) / ((int32_t)100)) >> 1);
-  var2 = ((int32_t)dig_H2 * (((T * (int32_t)dig_H4) / 
-         ((int32_t)100)) + (((T * ((T * (int32_t)dig_H5) / 
-         ((int32_t)100))) >> 6) / ((int32_t)100)) + (int32_t)(1 << 14))) >> 10;
-  var3 = var1 * var2;
-  var4 = ((((int32_t)dig_H6) << 7) + ((T * (int32_t) dig_H7) / ((int32_t)100))) >> 4;
-  var5 = ((var3 >> 14) * (var3 >> 14)) >> 10;
-  var6 = (var4 * var5) >> 1;
+	T = (((int32_t) t_fine * 5) + 128) >> 8;
+	var1 = (int32_t) humidity  - ((int32_t) ((int32_t)dig_H1 << 4)) - (((T * (int32_t) dig_H3) / ((int32_t)100)) >> 1);
+	var2 = ((int32_t)dig_H2 * (((T * (int32_t)dig_H4) / 
+				 ((int32_t)100)) + (((T * ((T * (int32_t)dig_H5) / 
+				 ((int32_t)100))) >> 6) / ((int32_t)100)) + (int32_t)(1 << 14))) >> 10;
+	var3 = var1 * var2;
+	var4 = ((((int32_t)dig_H6) << 7) + ((T * (int32_t) dig_H7) / ((int32_t)100))) >> 4;
+	var5 = ((var3 >> 14) * (var3 >> 14)) >> 10;
+	var6 = (var4 * var5) >> 1;
 
-  H = (var3 + var6) >> 12;
+	H = (var3 + var6) >> 12;
 
-  if (H > 102400) H = 102400; // check for over- and under-flow
-  else if(H < 0) H = 0;
+	if (H > 102400) H = 102400; // check for over- and under-flow
+	else if(H < 0) H = 0;
 
-  return (H / 1024.);
+	return (H / 1024.);
 }
 
 
@@ -179,32 +179,32 @@ float DFRobot_BME680::readPressure(void) {
 	
 	uint32_t pressure = 0;
 	uint8_t rawData[3];  // 20-bit pressure register data stored here
-  this->readReg(BME680_FIELD_0_PRESS_MSB, 3, &rawData[0]);  
-  pressure = (uint32_t) (((uint32_t) rawData[0] << 16 | (uint32_t) rawData[1] << 8 | rawData[2]) >> 4);
-	
+	this->readReg(BME680_FIELD_0_PRESS_MSB, 3, &rawData[0]);  
+	pressure = (uint32_t) (((uint32_t) rawData[0] << 16 | (uint32_t) rawData[1] << 8 | rawData[2]) >> 4);
+
 	int32_t var1 = 0, var2 = 0, var3 = 0, var4 = 0, P = 0;
-  var1 = (((int32_t) t_fine) >> 1) - 64000;
-  var2 = ((((var1 >> 2) * (var1 >> 2)) >> 11) * (int32_t) dig_P6) >> 2;
-  var2 = var2 + ((var1 * (int32_t)dig_P5) << 1);
-  var2 = (var2 >> 2) + ((int32_t) dig_P4 << 16);
-  var1 = (((((var1 >> 2) * (var1 >> 2)) >> 13) * ((int32_t) dig_P3 << 5)) >> 3) + (((int32_t) dig_P2 * var1) >> 1);
-  var1 = var1 >> 18;
-  var1 = ((32768 + var1) * (int32_t) dig_P1) >> 15;
-  P = 1048576 - pressure;
-  P = (int32_t)((P - (var2 >> 12)) * ((uint32_t)3125));
-  var4 = (1 << 31);
-  
-  if(P >= var4)
-    P = (( P / (uint32_t) var1) << 1);
-  else
-    P = ((P << 1) / (uint32_t) var1);
-    
-  var1 = ((int32_t) dig_P9 * (int32_t) (((P >> 3) * (P >> 3)) >> 13)) >> 12;
-  var2 = ((int32_t)(P >> 2) * (int32_t) dig_P8) >> 13;
-  var3 = ((int32_t)(P >> 8) * (int32_t)(P >> 8) * (int32_t)(P >> 8) * (int32_t)dig_P10) >> 17;
-  P = (int32_t)(P) + ((var1 + var2 + var3 + ((int32_t)dig_P7 << 7)) >> 4);
-  
-  return (P / 100.);
+	var1 = (((int32_t) t_fine) >> 1) - 64000;
+	var2 = ((((var1 >> 2) * (var1 >> 2)) >> 11) * (int32_t) dig_P6) >> 2;
+	var2 = var2 + ((var1 * (int32_t)dig_P5) << 1);
+	var2 = (var2 >> 2) + ((int32_t) dig_P4 << 16);
+	var1 = (((((var1 >> 2) * (var1 >> 2)) >> 13) * ((int32_t) dig_P3 << 5)) >> 3) + (((int32_t) dig_P2 * var1) >> 1);
+	var1 = var1 >> 18;
+	var1 = ((32768 + var1) * (int32_t) dig_P1) >> 15;
+	P = 1048576 - pressure;
+	P = (int32_t)((P - (var2 >> 12)) * ((uint32_t)3125));
+	var4 = (1 << 31);
+
+	if(P >= var4)
+		P = (( P / (uint32_t) var1) << 1);
+	else
+		P = ((P << 1) / (uint32_t) var1);
+		
+	var1 = ((int32_t) dig_P9 * (int32_t) (((P >> 3) * (P >> 3)) >> 13)) >> 12;
+	var2 = ((int32_t)(P >> 2) * (int32_t) dig_P8) >> 13;
+	var3 = ((int32_t)(P >> 8) * (int32_t)(P >> 8) * (int32_t)(P >> 8) * (int32_t)dig_P10) >> 17;
+	P = (int32_t)(P) + ((var1 + var2 + var3 + ((int32_t)dig_P7 << 7)) >> 4);
+	this->pressure = P;
+	return P;
 }
 
 
@@ -212,16 +212,16 @@ uint16_t DFRobot_BME680::readGas(void) {
 	
 	uint16_t gas = 0;
 	uint8_t rawData[2];  // 10-bit gas resistance register data stored here
-  this->readReg(BME680_FIELD_0_GAS_RL_MSB, 2, &rawData[0]);
-  gas = (uint16_t) (((uint16_t) rawData[0] << 2 | (0xC0 & rawData[1]) >> 6) );
-	
+	this->readReg(BME680_FIELD_0_GAS_RL_MSB, 2, &rawData[0]);
+	gas = (uint16_t) (((uint16_t) rawData[0] << 2 | (0xC0 & rawData[1]) >> 6) );
+
 	// uint8_t var = 0;
 	// readReg(BME680_FIELD_0_GAS_RL_LSB, 1, &var);
 	// uint8_t gasRange = var & 0x0F;
-  // double var1 = 0, gas_switch_error = 1.0;
-  // var1 =  (1340.0 + 5.0 * gas_switch_error) * const_array1[gasRange];
-  // float gas_res = var1 * const_array2[gasRange] / (gas - 512.0 + var1);
-  return gas;
+	// double var1 = 0, gas_switch_error = 1.0;
+	// var1 =  (1340.0 + 5.0 * gas_switch_error) * const_array1[gasRange];
+	// float gas_res = var1 * const_array2[gasRange] / (gas - 512.0 + var1);
+	return gas;
 }
 
 
@@ -229,26 +229,32 @@ uint16_t DFRobot_BME680::readGas(void) {
 // where TT is the target temperature in degrees Celsius
 uint8_t DFRobot_BME680::TT(uint16_t TT) {  //TT is in 200 to 400
 
-  uint8_t res_heat_x = 0;
-  double var1 = 0.0, var2 = 0.0, var3 = 0.0, var4 = 0.0, var5 = 0.0;
+	uint8_t res_heat_x = 0;
+	double var1 = 0.0, var2 = 0.0, var3 = 0.0, var4 = 0.0, var5 = 0.0;
 	uint8_t tempVar1 = 0, tempVar2 = 0;
 	this->readReg(0xec, 1, &tempVar1);
 	this->readReg(0xeb, 1, &tempVar2);
-  uint16_t par_g1 = ((uint16_t) tempVar1 << 8) | tempVar2;
+	uint16_t par_g1 = ((uint16_t) tempVar1 << 8) | tempVar2;
 	this->readReg(0xed, 1, &tempVar1);
-  uint8_t  par_g2 = tempVar1;
+	uint8_t  par_g2 = tempVar1;
 	this->readReg(0xee, 1, &tempVar1);
-  uint8_t  par_g3 = tempVar1;
+	uint8_t  par_g3 = tempVar1;
 	this->readReg(0x02, 1, &tempVar1);
-  uint8_t  res_heat_range = (tempVar1 & 0x30) >> 4;
+	uint8_t  res_heat_range = (tempVar1 & 0x30) >> 4;
 	this->readReg(0x00, 1, &tempVar1);
-  uint8_t res_heat_val = tempVar1;
-  var1 = ((double) par_g1/ 16.0) + 49.0;
-  var2 = (((double)par_g2 / 32768.0) * 0.0005) + 0.00235;
-  var3 = (double)par_g3 / 1024.0;
-  var4 = var1 * (1.0 + (var2 * (double)TT));
-  var5 = var4 + (var3 * 25.0); // use 25 C as ambient temperature
-  res_heat_x = (uint8_t)(((var5 * (4.0/(4.0 * (double)res_heat_range))) - 25.0) * 3.4 / ((res_heat_val * 0.002) + 1));
-  return res_heat_x;
+	uint8_t res_heat_val = tempVar1;
+	var1 = ((double) par_g1/ 16.0) + 49.0;
+	var2 = (((double)par_g2 / 32768.0) * 0.0005) + 0.00235;
+	var3 = (double)par_g3 / 1024.0;
+	var4 = var1 * (1.0 + (var2 * (double)TT));
+	var5 = var4 + (var3 * 25.0); // use 25 C as ambient temperature
+	res_heat_x = (uint8_t)(((var5 * (4.0/(4.0 * (double)res_heat_range))) - 25.0) * 3.4 / ((res_heat_val * 0.002) + 1));
+	return res_heat_x;
+}
+
+
+float BME680::readAltitude(void) {
+	
+	return (1000.0 * (101325 - this->pressure) / 3386.3752577878);
 }
 

@@ -142,18 +142,21 @@ enum GWaitMult {
 class DFRobot_BME680 {
 	private:
 		uint8_t		I2C_addr;
+		float			pressure;
+
 		void			writeReg(uint8_t addr, uint8_t dat);
 		void			readReg(uint8_t addr, uint8_t count, uint8_t *pBuf);
 		uint8_t		TT(uint16_t TT);
-		
+
 	public:
-							DFRobot_BME680(uint8_t addr);
-		boolean		init(void);
-		uint16_t	readGas(void);
-		float 		readTempture(void);
-		float 		readPressure(void);
-		float			readHumidity(void);
-		void			startConvert(void);
+						DFRobot_BME680(uint8_t addr);
+	boolean		init(void);
+	uint16_t	readGas(void);
+	float			readTempture(void);
+	float			readPressure(void);
+	float			readAltitude(void);
+	float			readHumidity(void);
+	void			startConvert(void);
 };
 
 

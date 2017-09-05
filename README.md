@@ -3,8 +3,6 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 
 ## Table of Contents
 
-* [BME680](#bme680)
-* [Table of Contents](#table_of_contents)
 * [Summary](#summary)
 * [Installation](#installation)
 * [Methods](#methods)
@@ -38,7 +36,7 @@ boolean init(void);
 void startConvert(void);
 
 //Return float = temperature. Unit degree Celsius, this is account to two decimal places
-float readTempture(void);	
+float readTempture(void);
 
 //Return float = humidity. Unit relative humidity, this is account to two decimal places
 float readHumidity(void);
@@ -47,7 +45,7 @@ float readHumidity(void);
 float readPressure(void);
 
 //Return float = gas. Unit Ohm, this is account to one decimal places
-float readGas(void);	
+float readGas(void);
 	
 ```
 	
