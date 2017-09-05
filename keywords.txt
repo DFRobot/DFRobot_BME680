@@ -1,8 +1,21 @@
-DFRobot_BME680 KEYWORD1
+#######################################
+# Syntax Coloring BME680
+#######################################
 
-init                KEYWORD2
-startConvert        KEYWORD2
-readTempture        KEYWORD2
-readHumidity        KEYWORD2
-readGas             KEYWORD2
-readAltitude        KEYWORD2
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+DFRobot_BME680	KEYWORD1	DFRobot_BME680
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init	KEYWORD2
+startConvert	KEYWORD2
+readTempture	KEYWORD2
+readHumidity	KEYWORD2
+readPressure	KEYWORD2
+readGas	KEYWORD2
+readAltitude	KEYWORD2
