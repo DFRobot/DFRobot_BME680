@@ -10,7 +10,7 @@ void setup(void)
 	delay(2000);
 	Serial.begin(115200);
 	while(!Serial);  //wait serial
-	if(bme.init()) {  //Return true if initialization succeeds, false otherwise
+	if(bme.init()) {  //if init sucessful, init will return 1, else return 0
 		Serial.println("init sucessful");
 	} else {
 		Serial.println("init faild");
@@ -39,7 +39,10 @@ void loop(void)
 	Serial.println(" C");	
 	Serial.print("pressure : ");
 	Serial.print(pressure, 2);
-	Serial.println(" pa");	
+	Serial.println(" pa");
+	Serial.print("altitude : ");
+	Serial.print(altitude, 1);
+	Serial.println(" m");	
 	Serial.print("humidity : ");
 	Serial.print(humidity, 2);
 	Serial.println(" %rh");	

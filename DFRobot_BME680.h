@@ -75,6 +75,8 @@
 
 #define BME680_ADDRESS                  0x76   // Address of BME680 altimeter when ADO = 0 (default)
 
+#define BME680_SEALEVEL                 1013.25f
+
 
 #define SerialDebug true  // set to true to get Serial output for debugging
 

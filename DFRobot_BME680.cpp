@@ -249,9 +249,9 @@ uint8_t DFRobot_BME680::TT(uint16_t TT)
 	return res_heat_x;
 }
 
-
-float BME680::readAltitude(void)
-{	
-	return (1000.0 * (101325 - this->pressure) / 3386.3752577878);
+float DFRobot_BME680::readAltitude(void)
+{
+	float pressure = this->readPressure() / 100.0F;
+	return 44330.0 * (1.0 - pow(pressure / BME680_SEALEVEL, 0.1903));
 }
 
