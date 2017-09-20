@@ -9,7 +9,7 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 * [Summary](#summary)
 * [Installation](#installation)
 * [Methods](#methods)
-
+* [Compatibility](#Compatibility)
 * [History](#history)
 * [Credits](#credits)
 <snippet>
