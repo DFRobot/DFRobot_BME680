@@ -1,5 +1,4 @@
 # BME680 Module
-![SVG1](https://raw.githubusercontent.com/DFRobot/binaryfiles/master/TEL0122/TEL0122svg1.png)
 
 # BME680 Library for Arduino
 Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C or SPI
