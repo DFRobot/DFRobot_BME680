@@ -109,7 +109,7 @@ void DFRobot_BME680::readReg(uint8_t addr, uint8_t count, uint8_t *pBuf)
 		*pBuf = Wire.read();
 		pBuf ++;
 	}
-	Wire.endTransmission();
+	//Wire.endTransmission();
 }
 
 
