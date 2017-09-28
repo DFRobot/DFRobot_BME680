@@ -1,5 +1,5 @@
 # BME680
-Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C or SPI.
+Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C over SPI.
 
 ## Table of Contents
 
@@ -9,6 +9,7 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 
 * [History](#history)
 * [Credits](#credits)
+* [Compatibility](#compatibility)
 <snippet>
 <content>
 
@@ -73,7 +74,17 @@ float readAltitude(void);
 float readGasResistance(void);
 
 ```
-	
+
+## Compatibility
+
+MCU                | Work Well | Work Wrong | Untested  | Remarks
+------------------ | :----------: | :----------: | :---------: | -----
+FireBeetle-ESP32  |      √       |             |            | 
+FireBeetle-ESP8266  |      √       |             |            | 
+FireBeetle-BLE4.1 |        √     |             |            |
+Arduino uno |        √     |             |            | 
+Arduino leonardo |        √     |             |            | 
+
 ## History
 
 - Sep 4, 2017 - Version 1.0.0 released.
