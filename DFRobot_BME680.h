@@ -1,8 +1,7 @@
-#ifndef _BME680_H
-#define _BME680_H
+#ifndef _DFRobot_BME680_h
+#define _DFRobot_BME680_h
 
 #include "Arduino.h"
-#include "Wire.h"
 
 #define BME680_CALIB_DATA00             0x00   // eight bytes of device-specific calibration data 0x00 - 0x07
 #define BME680_FIELD_0_MEAS_STATUS_0    0x1D
@@ -62,18 +61,13 @@
 
 #define BME680_CALIB_DATA_80            0x80  // more calibration data 0x80 - 0xA1
 
-#define BME680_ID                       0xD0  //should return 0x61
-#define BME680_RESET                    0xE0   
-
 #define BME680_CALIB_DATA_E1            0xE1  // more calibration data 0xE1 - 0xF0
 
-#define BME680_CTRL_HUM                 0xF2   
+//#define BME680_CTRL_HUM                 0xF2
 #define BME680_SPI_MEM_PAGE             0xF3   
 
 #define BME680_CALIB_ADDR_1             0x89  // 25 bytes of calibration data for I2C
 #define BME680_CALIB_ADDR_2             0xE1  // 16 bytes of calibration data for I2C
-
-#define BME680_ADDRESS                  0x76   // Address of BME680 altimeter when ADO = 0 (default)
 
 #define BME680_SEALEVEL                 1013.25f
 
@@ -141,26 +135,24 @@ enum GWaitMult {
 };
 
 
-class DFRobot_BME680 {
-	
-private:
-	uint8_t  I2C_addr;
-	float    pressure;
-
-	void     writeReg(uint8_t addr, uint8_t dat);
-	void     readReg(uint8_t addr, uint8_t count, uint8_t *pBuf);
-	uint8_t  TT(uint16_t TT);
-
-public:
-DFRobot_BME680(uint8_t addr);
-	boolean   init(void);
-	uint16_t  readGas(void);
-	float     readTempture(void);
-	float     readPressure(void);
-	float     readAltitude(void);
-	float     readHumidity(void);
-	void      startConvert(void);
+class DFRobot_BME680
+{
+  public:
+    bool        begin(void);
+    float       readTempture(void);
+    float       readHumidity(void);
+    float       readPressure(void);
+    float       readGas(void);
+    float       readAltitude(void);
+    void        startConvert(void);
+    float       readGasResistance(void);
+    
+  public:
+    uint8_t       TT(uint16_t tt);
+    
+    virtual void        readReg(uint8_t addr, uint8_t count, uint8_t* pBuf) = 0;
+    virtual void        writeReg(uint8_t addr, uint8_t dat) = 0;
+    virtual uint8_t     readID(void) = 0;
 };
-
 
 #endif

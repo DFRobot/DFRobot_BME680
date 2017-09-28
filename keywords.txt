@@ -6,16 +6,18 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-DFRobot_BME680	KEYWORD1	DFRobot_BME680
+DFRobot_BME680_SPI	KEYWORD1
+DFRobot_BME680_I2C	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-init	KEYWORD2
+begin	KEYWORD2
 startConvert	KEYWORD2
 readTempture	KEYWORD2
 readHumidity	KEYWORD2
 readPressure	KEYWORD2
 readGas	KEYWORD2
 readAltitude	KEYWORD2
+readGasRisistance	KEYWORD2
