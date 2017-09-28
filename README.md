@@ -34,7 +34,11 @@ DFRobot_BME680_SPI bme(pin_cs);
 
 
 /*
- * @brief begin BME680 device and return result(1: successful, 0: faild)
+ * @brief begin BME680 device
+ *
+ * @return result of begin
+ *  1:successed
+ *  0:faild
  */
 boolean begin(void);
 
@@ -45,31 +49,43 @@ void startConvert(void);
 
 /*
  * @brief read the temperature value (unit ℃)
+ *
+ * @return value of temperature
  */
 float readTempture(void);
 
 /*
  * @brief read the humidity value (unit %rh)
+ *
+ * @return value of humidity
  */
 float readHumidity(void);
 
 /*
  * @brief read the pressure value (unit pa)
+ *
+ * @return value of pressure
  */
 float readPressure(void);
 
 /*
  * @brief read the gas(Indoor Air Quality) value (unit ppm)
+ *
+ * @return value of gas(Indoor Air Quality)
  */
 float readGas(void);
 
 /*
  * @brief read the gas altitude (unit meter)
+ *
+ * @return value of altitude
  */
 float readAltitude(void);
 
 /*
  * @brief read the gas resistance(unit ohm)
+ *
+ * @return value of gas resistance
  */
 float readGasResistance(void);
 
