@@ -4,8 +4,8 @@
 const uint8_t bme_addr = 0x77;  //bme I2C method address
 const uint8_t bme_cs = D3;  //bme SPI method cs pin
 
-DFRobot_BME680_SPI bme(bme_cs);  //SPI method
-//DFRobot_BME680_I2C bme(bme_addr);  //I2C method
+//DFRobot_BME680_SPI bme(bme_cs);  //SPI method
+DFRobot_BME680_I2C bme(bme_addr);  //I2C method
 
 
 void setup(void)
