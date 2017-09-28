@@ -39,8 +39,8 @@ uint8_t DFRobot_BME680_SPI::readID(void)
   uint8_t       var1 = 0;
   this->writeReg(BME680_STATUS, 0x00);
   this->writeReg(BME680_RESET, 0xb6);
-	delay(100);
-	this->readReg(BME680_ID, 1, &id);
+  delay(100);
+  this->readReg(BME680_ID, 1, &id);
   Serial.print("ID is :0x");
   Serial.println(id, HEX);
   return id;
