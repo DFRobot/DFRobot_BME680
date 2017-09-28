@@ -59,7 +59,7 @@ float readHumidity(void);
 float readPressure(void);
 
 /*
- * @brief read the gas value (unit ppm)
+ * @brief read the gas(Indoor Air Quality) value (unit ppm)
  */
 float readGas(void);
 
