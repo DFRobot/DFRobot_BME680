@@ -146,6 +146,7 @@ class DFRobot_BME680
     float       readAltitude(void);
     void        startConvert(void);
     float       readGasResistance(void);
+    float       readSeaLevel(float altitude);
     
   public:
     uint8_t       TT(uint16_t tt);
