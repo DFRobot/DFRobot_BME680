@@ -89,6 +89,15 @@ float readAltitude(void);
  */
 float readGasResistance(void);
 
+/*
+ * @brief read the sea level pressure(unit pa)
+ *
+ * @param altitude
+ *
+ * @return value of "Normalised Atmospheric Pressure"
+ */
+float readSeaLevel(float altitude)
+
 ```
 
 ## Compatibility
@@ -105,6 +114,7 @@ Arduino leonardo |        √     |             |            |
 
 - Sep 4, 2017 - Version 1.0.0 released.
 - Sep 28, 2017 - Version 1.1.0 released.
+- Oct 9, 2017 - Version 1.1.1 released.
 
 ## Credits
 
