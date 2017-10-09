@@ -37,8 +37,8 @@ DFRobot_BME680_SPI bme(pin_cs);
  * @brief begin BME680 device
  *
  * @return result of begin
- *  1:successed
- *  0:faild
+ *  true:successed
+ *  false:faild
  */
 boolean begin(void);
 
