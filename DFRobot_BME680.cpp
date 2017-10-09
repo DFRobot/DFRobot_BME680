@@ -232,3 +232,10 @@ void DFRobot_BME680::startConvert(void)
   this->writeReg(BME680_CTRL_MEAS, Tosr << 5 | Posr << 2 | Mode);
 }
 
+
+float DFRobot_BME680::readSeaLevel(float altitude)
+{
+  float pressure = this->readPressure();
+  return (pressure / pow(1.0 - (altitude / 44330.0), 5.255));
+}
+
