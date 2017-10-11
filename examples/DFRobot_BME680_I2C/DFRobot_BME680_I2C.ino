@@ -1,59 +1,41 @@
 #include "DFRobot_BME680_I2C.h"
+#include "Wire.h"
 
-const uint8_t bme_addr = 0x77;  //bme I2C method address
+#ifdef __AVR__
+#elif defined ESP_PLATFORM
+#elif defined __ets__
+#else
+  #error unknow board
+#endif
 
-DFRobot_BME680_I2C bme(bme_addr);  //I2C method
+DFRobot_BME680_I2C bme(0x77);  //0x77 I2C address
 
 
-void setup(void)
+void setup()
 {
-  delay(500);
   Serial.begin(115200);
-  while(!Serial);  //wait serial
-  Serial.println("BME680 TEST");
-  if(bme.begin()) {
-    Serial.println("init sucessful");
-  } else {
-    Serial.println("init faild");
-    for(;;);
-  }
-  Serial.println();
-}
-
-
-void loop(void)
-{
-  float     temp = 0, pressure = 0, humidity = 0, altitude = 0, gasResistance = 0;
-  uint16_t  gas = 0;
-  uint8_t   status = 0;
-
+  while(!Serial);
   delay(1000);
-  bme.startConvert();             //to get a accurate values
-  delay(1);
-  temp = bme.readTempture();      //float tempture, unit degree Celsius, this is account to two decimal places
-  pressure = bme.readPressure();  //float pressure, Unit Unit MPa, this is account to two decimal places
-  altitude = bme.readAltitude();  //float altitude, Unit metre, this is account to one decimal places
-  humidity = bme.readHumidity();  //float humidity, Unit relative humidity, this is account to two decimal places
-  gas = bme.readGas();            //uint16_t gas, Unit ppm, this is account to one decimal places
-  gasResistance = bme.readGasResistance();  //float resistance, Unit ohm, this is account to two decimal places
   Serial.println();
-  Serial.print("tempture :");
-  Serial.print(temp, 2);
-  Serial.println(" C");
-  Serial.print("pressure :");
-  Serial.print(pressure, 2);
-  Serial.println(" pa");
-  Serial.print("altitude :");
-  Serial.print(altitude, 1);
-  Serial.println(" m");
-  Serial.print("humidity :");
-  Serial.print(humidity, 2);
-  Serial.println(" %rh");
-  Serial.print("gas :");
-  Serial.print(gas);
-  Serial.println(" ppm");
-  Serial.print("gas resistance :");
-  Serial.print(gasResistance);
-  Serial.println(" ohm");
+  Serial.print(bme.begin());
 }
 
+void loop()
+{
+  bme.startConvert();
+  delay(1000);
+  bme.update();
+  Serial.println();
+  Serial.print("temperature(C) :");
+  Serial.println(bme.readTempture(), 2);
+  Serial.print("pressure(Pa) :");
+  Serial.println(bme.readPressure());
+  Serial.print("humidity(%rh) :");
+  Serial.println(bme.readHumidity(), 2);
+  Serial.print("gas(ppm) :");
+  Serial.println(bme.readGas());
+  Serial.print("gas resistance(ohm) :");
+  Serial.println(bme.readGasResistance());
+  Serial.print("altitude(m) :");
+  Serial.println(bme.readAltitude());
+}

@@ -1,44 +1,45 @@
 #include "DFRobot_BME680_I2C.h"
 
 
-DFRobot_BME680_I2C::DFRobot_BME680_I2C(uint8_t addr)
-{
-  this->I2C_addr = addr;
-}
-
-
-void DFRobot_BME680_I2C::readReg(uint8_t addr, uint8_t count, uint8_t* pBuf)
+static int8_t bme680_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   Wire.begin();
-  Wire.beginTransmission(this->I2C_addr);
-  Wire.write(addr);
+  Wire.beginTransmission(dev_id);
+  Wire.write(reg_addr);
   Wire.endTransmission();
-  Wire.requestFrom(this->I2C_addr, count);
+  Wire.requestFrom(dev_id, len);
   while(Wire.available()) {
-    *pBuf = Wire.read();
-    pBuf ++;
+    *data = Wire.read();
+    data ++;
   }
+  return 0;
 }
 
 
-void DFRobot_BME680_I2C::writeReg(uint8_t addr, uint8_t dat)
+static int8_t bme680_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   Wire.begin();
-  Wire.beginTransmission(this->I2C_addr);
-  Wire.write(addr);
-  Wire.write(dat);
+  Wire.beginTransmission(dev_id);
+  Wire.write(reg_addr);
+  while(len --) {
+    Wire.write(*data);
+    data ++;
+  }
   Wire.endTransmission();
+  return 0;
 }
 
 
-uint8_t DFRobot_BME680_I2C::readID(void)
+static void bme680_delay_ms(uint32_t period)
 {
-  uint8_t       id = 0;
-  this->writeReg(BME680_RESET, 0xb6);
-  delay(100);
-  this->readReg(BME680_ID, 1, &id);
-  Serial.print("ID is :0x");
-  Serial.println(id, HEX);
-  return id;
+  delay(period);
 }
+
+
+DFRobot_BME680_I2C::DFRobot_BME680_I2C(uint8_t I2CAddr) :
+                    DFRobot_BME680(bme680_i2c_read, bme680_i2c_write, bme680_delay_ms, eBME680_INTERFACE_I2C)
+{
+  DFRobot_BME680::bme680_I2CAddr = I2CAddr;
+}
+
 

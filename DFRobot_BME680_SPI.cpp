@@ -1,48 +1,48 @@
 #include "DFRobot_BME680_SPI.h"
 
+static uint8_t bme680_cs = 0;
 
-DFRobot_BME680_SPI::DFRobot_BME680_SPI(uint8_t pin_cs)
+
+static int8_t bme680_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
-  this->pin_cs = pin_cs;
-  pinMode(this->pin_cs, OUTPUT);
-  digitalWrite(this->pin_cs, 1);
-}
-
-
-void DFRobot_BME680_SPI::readReg(uint8_t addr, uint8_t count, uint8_t* pBuf)
-{
-  uint8_t i = 0;
   SPI.begin();
-  digitalWrite(this->pin_cs, 0);
-  SPI.transfer(addr | 0x80);
-  for(; i < count; i ++) {
-    *pBuf = SPI.transfer(0x00);
-    pBuf ++;
+  digitalWrite(bme680_cs, 0);
+  SPI.transfer(reg_addr);
+  while(len --) {
+    *data = SPI.transfer(0x00);
+    data ++;
   }
-  digitalWrite(this->pin_cs, 1);
+  digitalWrite(bme680_cs, 1);
+  return 0;
 }
 
 
-void DFRobot_BME680_SPI::writeReg(uint8_t addr, uint8_t dat)
+static int8_t bme680_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   SPI.begin();
-  digitalWrite(this->pin_cs, 0);
-  SPI.transfer(addr);
-  SPI.transfer(dat);
-  digitalWrite(this->pin_cs, 1);
+  digitalWrite(bme680_cs, 0);
+  SPI.transfer(reg_addr);
+  while(len --) {
+    SPI.transfer(*data);
+    data ++;
+  }
+  digitalWrite(bme680_cs, 1);
+  return 0;
 }
 
 
-uint8_t DFRobot_BME680_SPI::readID(void)
+static void bme680_delay_ms(uint32_t period)
 {
-  uint8_t       id = 0;
-  uint8_t       var1 = 0;
-  this->writeReg(BME680_STATUS, 0x00);
-  this->writeReg(BME680_RESET, 0xb6);
-  delay(100);
-  this->readReg(BME680_ID, 1, &id);
-  Serial.print("ID is :0x");
-  Serial.println(id, HEX);
-  return id;
+  delay(period);
 }
+
+
+DFRobot_BME680_SPI::DFRobot_BME680_SPI(uint8_t pin_cs) :
+                    DFRobot_BME680(bme680_spi_read, bme680_spi_write, bme680_delay_ms, eBME680_INTERFACE_SPI)
+{
+  bme680_cs = pin_cs;
+  pinMode(bme680_cs, OUTPUT);
+  digitalWrite(bme680_cs, 1);
+}
+
 
