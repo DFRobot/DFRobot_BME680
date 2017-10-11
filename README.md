@@ -9,6 +9,7 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 
 * [History](#history)
 * [Credits](#credits)
+* [Compatibility](#compatibility)
 <snippet>
 <content>
 
@@ -33,7 +34,11 @@ DFRobot_BME680_SPI bme(pin_cs);
 
 
 /*
- * @brief begin BME680 device and return result(1: successful, 0: faild)
+ * @brief begin BME680 device
+ *
+ * @return result
+ *    ture : falid
+ *    false : succussful
  */
 boolean begin(void);
 
@@ -43,41 +48,69 @@ boolean begin(void);
 void startConvert(void);
 
 /*
+ * @brief update all data to MCU ram
+ */
+void update(void);
+
+/*
  * @brief read the temperature value (unit ℃)
+ *
+ * @return temperature value, this value has two decimal points
  */
 float readTempture(void);
 
 /*
  * @brief read the humidity value (unit %rh)
+ *
+ * @return humidity value, this value has two decimal points
  */
 float readHumidity(void);
 
 /*
  * @brief read the pressure value (unit pa)
+ *
+ * @return pressure value, this value has two decimal points
  */
 float readPressure(void);
 
 /*
- * @brief read the gas value (unit ppm)
+ * @brief read the IAQ value (unit ppm)
+ *
+ * @return IAQ value
  */
 float readGas(void);
 
 /*
- * @brief read the gas altitude (unit meter)
+ * @brief read the altitude (unit meter)
+ *
+ * @return altitude value, this value has two decimal points
  */
 float readAltitude(void);
 
 /*
  * @brief read the gas resistance(unit ohm)
+ *
+ * @return temperature value, this value has two decimal points
  */
 float readGasResistance(void);
 
 ```
-	
+
+## Compatibility
+
+MCU                | Work Well | Work Wrong | Untested  | Remarks
+------------------ | :----------: | :----------: | :---------: | -----
+FireBeetle-ESP32  |      √       |             |            | 
+FireBeetle-ESP8266  |      √       |             |            | 
+FireBeetle-BLE4.1 |       √      |             |            | 
+Arduino uno |       √      |             |            | 
+Arduino leonardo |      √       |             |            | 
+
 ## History
 
 - Sep 4, 2017 - Version 1.0.0 released.
 - Sep 28, 2017 - Version 1.1.0 released.
+- Oct 11, 2017 - Version 2.0.0 released.
 
 ## Credits
 
