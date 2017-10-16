@@ -7,7 +7,7 @@ static int8_t bme680_i2c_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, u
   Wire.beginTransmission(dev_id);
   Wire.write(reg_addr);
   Wire.endTransmission();
-  Wire.requestFrom(dev_id, len);
+  Wire.requestFrom(dev_id, (uint8_t)len);
   while(Wire.available()) {
     *data = Wire.read();
     data ++;
