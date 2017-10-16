@@ -2,7 +2,7 @@
 
 static struct bme680_dev bme680_sensor;
 static struct bme680_field_data bme680_data;
-static const uint8_t convertCmd = (0x02 << 5) | (0x05 << 2) | (0x01);
+static uint8_t convertCmd = (0x02 << 5) | (0x05 << 2) | (0x01);
 
 DFRobot_BME680::DFRobot_BME680(bme680_com_fptr_t readReg, bme680_com_fptr_t writeReg, 
                                bme680_delay_fptr_t delayMS, eBME680_INTERFACE interface)
