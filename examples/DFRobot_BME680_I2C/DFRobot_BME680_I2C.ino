@@ -1,4 +1,4 @@
-#include "DFRobot_BME680_SPI.h"
+#include "DFRobot_BME680_I2C.h"
 #include "Wire.h"
 #include "SPI.h"
 
