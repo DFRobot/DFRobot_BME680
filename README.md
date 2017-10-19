@@ -34,7 +34,11 @@ DFRobot_BME680_SPI bme(pin_cs);
 
 
 /*
- * @brief begin BME680 device and return result(1: successful, 0: faild)
+ * @brief begin BME680 device and return result
+ *
+ * @return begin result
+ *   true: faild
+ *   false:successful
  */
 boolean begin(void);
 
@@ -42,6 +46,11 @@ boolean begin(void);
  * @brief start convert to get a accurate values
  */
 void startConvert(void);
+
+/*
+ * @brief update result
+ */
+void update(void);
 
 /*
  * @brief read the temperature value (unit ℃)
