@@ -1,4 +1,10 @@
 # BME680
+BME680 is an integrated environmental sensor developed specifically for mobile applications and wearables where size and low power consumption are key requirements. Expanding Bosch Sensortec’s existing family of environmental sensors, the BME680 integrates for the first time individual high linearity and high accuracy sensors for gas, pressure, humidity and temperature.
+
+![SVG1](https://raw.githubusercontent.com/DFRobot/binaryfiles/master/SEN0248/SEN0248svg1.png)
+
+## DFRobot_EINKBWR_IL0376F Library for Arduino
+---------------------------------------------------------
 Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C over SPI.
 
 ## Table of Contents
@@ -34,11 +40,11 @@ DFRobot_BME680_SPI bme(pin_cs);
 
 
 /*
- * @brief begin BME680 device and return result
+ * @brief begin BME680 device
  *
- * @return begin result
- *   true: faild
- *   false:successful
+ * @return result
+ *    ture : falid
+ *    false : succussful
  */
 boolean begin(void);
 
@@ -48,32 +54,42 @@ boolean begin(void);
 void startConvert(void);
 
 /*
- * @brief update result
+ * @brief update all data to MCU ram
  */
 void update(void);
 
 /*
  * @brief read the temperature value (unit ℃)
+ *
+ * @return temperature value, this value has two decimal points
  */
-float readTemperature(void);
+float readTempture(void);
 
 /*
  * @brief read the humidity value (unit %rh)
+ *
+ * @return humidity value, this value has two decimal points
  */
 float readHumidity(void);
 
 /*
  * @brief read the pressure value (unit pa)
+ *
+ * @return pressure value, this value has two decimal points
  */
 float readPressure(void);
 
 /*
- * @brief read the gas altitude (unit meter)
+ * @brief read the altitude (unit meter)
+ *
+ * @return altitude value, this value has two decimal points
  */
 float readAltitude(void);
 
 /*
  * @brief read the gas resistance(unit ohm)
+ *
+ * @return temperature value, this value has two decimal points
  */
 float readGasResistance(void);
 
@@ -93,7 +109,8 @@ Arduino leonardo |      √       |             |            |
 
 - Sep 4, 2017 - Version 1.0.0 released.
 - Sep 28, 2017 - Version 1.1.0 released.
-- OCT 19, 2017 - Version 2.1.0 released.
+- Oct 11, 2017 - Version 2.0.0 released.
+- Oct 19, 2017 - Version 2.1.0 released.
 
 ## Credits
 
