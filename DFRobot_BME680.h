@@ -497,7 +497,7 @@ class DFRobot_BME680
     boolean       begin(void);
     void          update(void);
     void          startConvert(void);
-    float         readTempture(void);
+    float         readTemperature(void);
     float         readPressure(void);
     float         readHumidity(void);
     float         readAltitude(void);
