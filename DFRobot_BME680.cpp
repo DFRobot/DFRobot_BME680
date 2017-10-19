@@ -912,8 +912,8 @@ static int16_t calc_temperature(uint32_t temp_adc, struct bme680_dev *dev)
 {
 	int64_t var1;
 	int64_t var2;
-	int64_t var3;
-	int16_t calc_temp;
+	//int64_t var3;
+	//int16_t calc_temp;
 
   /*
 	var1 = ((int32_t) temp_adc / 8) - ((int32_t) dev->calib.par_t1 * 2);
