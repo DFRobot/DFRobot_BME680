@@ -93,6 +93,24 @@ float readAltitude(void);
  */
 float readGasResistance(void);
 
+/*
+ * @brief read normalised atmospheric pressure (unit pa)
+ *
+ * @param altitude   accurate altitude for normalising
+ * 
+ * @return normalised atmospheric pressure
+ */
+float readSeaLevel(float altitude);
+
+/*
+ * @brief read the Calibrated altitude (unit meter)
+ *
+ * @param seaLevelPressure  normalised atmospheric pressure
+ *
+ * @return calibrated altitude value , this value has two decimal points
+ */
+float readCalibratedAltitude(float seaLevelPressure);
+
 ```
 
 ## Compatibility
