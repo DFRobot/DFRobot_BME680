@@ -27,7 +27,7 @@ void loop()
   bme.update();
   Serial.println();
   Serial.print("temperature(C) :");
-  Serial.println(bme.readTempture(), 2);
+  Serial.println(bme.readTemperature(), 2);
   Serial.print("pressure(Pa) :");
   Serial.println(bme.readPressure());
   Serial.print("humidity(%rh) :");
