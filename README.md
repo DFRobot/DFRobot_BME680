@@ -55,7 +55,7 @@ void update(void);
 /*
  * @brief read the temperature value (unit ℃)
  */
-float readTempture(void);
+float readTemperature(void);
 
 /*
  * @brief read the humidity value (unit %rh)
