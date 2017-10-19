@@ -122,7 +122,7 @@ void DFRobot_BME680::update(void)
 }
 
 
-float DFRobot_BME680::readTempture(void)
+float DFRobot_BME680::readTemperature(void)
 {
   return bme680_data.temperature;
 }
