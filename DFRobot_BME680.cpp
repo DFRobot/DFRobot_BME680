@@ -1,55 +1,8 @@
-/**
- * Copyright (C) 2017 - 2018 Bosch Sensortec GmbH
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * Neither the name of the copyright holder nor the names of the
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER
- * OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- *
- * The information provided is believed to be accurate and reliable.
- * The copyright holder assumes no responsibility
- * for the consequences of use
- * of such information nor for any infringement of patents or
- * other rights of third parties which may result from its use.
- * No license is granted by implication or otherwise under any patent or
- * patent rights of the copyright holder.
- *
- * @file	bme680.h
- * @date	5 Jul 2017
- * @version	3.5.1
- * @brief
- *
- */
 #include "DFRobot_BME680.h"
 
 static struct bme680_dev bme680_sensor;
 static struct bme680_field_data bme680_data;
-static uint8_t convertCmd = (0x02 << 5) | (0x05 << 2) | (0x01);
+static uint8_t convertCmd = (0x05 << 5) | (0x05 << 2) | (0x01);
 
 DFRobot_BME680::DFRobot_BME680(bme680_com_fptr_t readReg, bme680_com_fptr_t writeReg, 
                                bme680_delay_fptr_t delayMS, eBME680_INTERFACE interface)
@@ -74,27 +27,33 @@ boolean DFRobot_BME680::begin(void)
   int8_t        rslt = 0;
 
 	/* Set the temperature, pressure and humidity settings */
-	bme680_sensor.tph_sett.os_hum = BME680_OS_2X;
-	bme680_sensor.tph_sett.os_pres = BME680_OS_4X;
-	bme680_sensor.tph_sett.os_temp = BME680_OS_8X;
-	bme680_sensor.tph_sett.filter = BME680_FILTER_SIZE_3;
+	//bme680_sensor.tph_sett.os_hum = BME680_OS_2X;
+	//bme680_sensor.tph_sett.os_pres = BME680_OS_4X;
+	//bme680_sensor.tph_sett.os_temp = BME680_OS_8X;
+	//bme680_sensor.tph_sett.filter = BME680_FILTER_SIZE_3;
 
-	/* Set the remaining gas sensor settings and link the heating profile */
-	bme680_sensor.gas_sett.run_gas = BME680_ENABLE_GAS_MEAS;
-	/* Create a ramp heat waveform in 3 steps */
-	bme680_sensor.gas_sett.heatr_temp = 320; /* degree Celsius */
-	bme680_sensor.gas_sett.heatr_dur = 150; /* milliseconds */
+  
+  bme680_sensor.tph_sett.os_hum = 5;
+  bme680_sensor.tph_sett.os_pres = 5;
+  bme680_sensor.tph_sett.os_temp = 5;
+  bme680_sensor.tph_sett.filter = 4;
 
-	/* Select the power mode */
-	/* Must be set before writing the sensor configuration */
-	bme680_sensor.power_mode = BME680_FORCED_MODE; 
+	 /* Set the remaining gas sensor settings and link the heating profile */
+	 bme680_sensor.gas_sett.run_gas = BME680_ENABLE_GAS_MEAS;
+	 /* Create a ramp heat waveform in 3 steps */
+	 bme680_sensor.gas_sett.heatr_temp = 320; /* degree Celsius */
+	 bme680_sensor.gas_sett.heatr_dur = 150; /* milliseconds */
 
-	/* Set the required sensor settings needed */
-	set_required_settings = BME680_OST_SEL | BME680_OSP_SEL | BME680_OSH_SEL | BME680_FILTER_SEL 
-		| BME680_GAS_SENSOR_SEL;
+	 /* Select the power mode */
+	 /* Must be set before writing the sensor configuration */
+	 bme680_sensor.power_mode = BME680_FORCED_MODE; 
+
+	 /* Set the required sensor settings needed */
+	 set_required_settings = BME680_OST_SEL | BME680_OSP_SEL | BME680_OSH_SEL | BME680_FILTER_SEL 
+		 | BME680_GAS_SENSOR_SEL;
 		
-	/* Set the desired sensor configuration */
-	rslt = bme680_set_sensor_settings(set_required_settings, &bme680_sensor);
+	 /* Set the desired sensor configuration */
+	 rslt = bme680_set_sensor_settings(set_required_settings, &bme680_sensor);
 
 	/* Set the power mode */
 	rslt = bme680_set_sensor_mode(&bme680_sensor);
@@ -141,12 +100,6 @@ float DFRobot_BME680::readHumidity(void)
 float DFRobot_BME680::readAltitude(void)
 {
   return bme680_data.altitude;
-}
-
-
-uint16_t DFRobot_BME680::readGas(void)
-{
-  return bme680_data.gas;
 }
 
 
@@ -913,14 +866,25 @@ static int16_t calc_temperature(uint32_t temp_adc, struct bme680_dev *dev)
 	int64_t var3;
 	int16_t calc_temp;
 
+  /*
 	var1 = ((int32_t) temp_adc / 8) - ((int32_t) dev->calib.par_t1 * 2);
 	var2 = (var1 * (int32_t) dev->calib.par_t2) / 2048;
 	var3 = ((var1 / 2) * (var1 / 2)) / 4096;
 	var3 = ((var3) * ((int32_t) dev->calib.par_t3 * 16)) / 16384;
 	dev->calib.t_fine = (int32_t) (var2 + var3);
 	calc_temp = (int16_t) (((dev->calib.t_fine * 5) + 128) / 256);
+	*/
 
-	return calc_temp;
+  
+  var1 = ((((temp_adc>>3) - ((int32_t)dev->calib.par_t1<<1))) * ((int32_t)dev->calib.par_t2)) >> 11;
+		var2 = (((((temp_adc>>4) - ((int32_t)dev->calib.par_t1)) * ((temp_adc>>4) - ((int32_t)dev->calib.par_t1))) >> 12) *
+		((int32_t)dev->calib.par_t3)) >> 14;
+		dev->calib.t_fine = var1 + var2;
+		float T = (dev->calib.t_fine * 5 + 128) >> 8;
+  
+  
+	//return calc_temp;
+	return T;
 }
 
 /*!
@@ -928,6 +892,7 @@ static int16_t calc_temperature(uint32_t temp_adc, struct bme680_dev *dev)
  */
 static uint32_t calc_pressure(uint32_t pres_adc, const struct bme680_dev *dev)
 {
+  /*
 	int32_t var1;
 	int32_t var2;
 	int32_t var3;
@@ -938,10 +903,12 @@ static uint32_t calc_pressure(uint32_t pres_adc, const struct bme680_dev *dev)
 	var2 = ((var2) * (int32_t) dev->calib.par_p6) / 4;
 	var2 = var2 + ((var1 * (int32_t) dev->calib.par_p5) * 2);
 	var2 = (var2 / 4) + ((int32_t) dev->calib.par_p4 * 65536);
+	
 	var1 = ((var1 / 4) * (var1 / 4)) / 8192;
 	var1 = (((var1) * ((int32_t) dev->calib.par_p3 * 32)) / 8) + (((int32_t) dev->calib.par_p2 * var1) / 2);
 	var1 = var1 / 262144;
 	var1 = ((32768 + var1) * (int32_t) dev->calib.par_p1) / 32768;
+	
 	calc_pres = (int32_t) (1048576 - pres_adc);
 	calc_pres = (int32_t) ((calc_pres - (var2 / 4096)) * (3125));
 	calc_pres = ((calc_pres / var1) * 2);
@@ -950,8 +917,32 @@ static uint32_t calc_pressure(uint32_t pres_adc, const struct bme680_dev *dev)
 	var3 = ((int32_t) (calc_pres / 256) * (int32_t) (calc_pres / 256) * (int32_t) (calc_pres / 256)
 	        * (int32_t) dev->calib.par_p10) / 131072;
 	calc_pres = (int32_t) (calc_pres) + ((var1 + var2 + var3 + ((int32_t) dev->calib.par_p7 * 128)) / 16);
+	*/
 
-	return (uint32_t) calc_pres;
+  
+	int32_t var1 = 0, var2 = 0, var3 = 0, var4 = 0, P = 0;
+  var1 = (((int32_t) dev->calib.t_fine) >> 1) - 64000;
+  var2 = ((((var1 >> 2) * (var1 >> 2)) >> 11) * (int32_t) dev->calib.par_p6) >> 2;
+  var2 = var2 + ((var1 * (int32_t)dev->calib.par_p5) << 1);
+  var2 = (var2 >> 2) + ((int32_t) dev->calib.par_p4 << 16);
+  
+  var1 = (((((var1 >> 2) * (var1 >> 2)) >> 13) * ((int32_t) dev->calib.par_p3 << 5)) >> 3) + (((int32_t) dev->calib.par_p2 * var1) >> 1);
+  var1 = var1 >> 18;
+  var1 = ((32768 + var1) * (int32_t) dev->calib.par_p1) >> 15;
+  
+  P = 1048576 - pres_adc;
+  P = (int32_t)((P - (var2 >> 12)) * ((uint32_t)3125));
+  var4 = (1 << 31);
+
+  P = ((P << 1) / (uint32_t) var1);
+  var1 = ((int32_t) dev->calib.par_p9 * (int32_t) (((P >> 3) * (P >> 3)) >> 13)) >> 12;
+  var2 = ((int32_t)(P >> 2) * (int32_t) dev->calib.par_p8) >> 13;
+  var3 = ((int32_t)(P >> 8) * (int32_t)(P >> 8) * (int32_t)(P >> 8) * (int32_t)dev->calib.par_p10) >> 17;
+  P = (int32_t)(P) + ((var1 + var2 + var3 + ((int32_t)dev->calib.par_p7 << 7)) >> 4);
+	
+	//return (uint32_t) calc_pres;
+	return P;
+	
 }
 
 /*!
@@ -1081,7 +1072,6 @@ static int8_t read_field_data(struct bme680_field_data *data, struct bme680_dev 
 			data->status = buff[0] & BME680_NEW_DATA_MSK;
 			data->gas_index = buff[0] & BME680_GAS_INDEX_MSK;
 			data->meas_index = buff[1];
-      data->gas = (float)((uint16_t) buff[13] << 2 | (uint16_t) buff[14] >> 6) / 1024 * 500;
 
 			/* read the raw data from the sensor */
 			adc_pres = (uint32_t) (((uint32_t) buff[2] * 4096) | ((uint32_t) buff[3] * 16) | ((uint32_t) buff[4] / 16));
@@ -1098,7 +1088,8 @@ static int8_t read_field_data(struct bme680_field_data *data, struct bme680_dev 
 				data->pressure = (float) calc_pressure(adc_pres, dev);
 				data->humidity = (float) calc_humidity(adc_hum, dev) / 1000.0f;
 				data->gas_resistance = (float) calc_gas_resistance(adc_gas_res, gas_range, dev);
-        data->altitude = 44330.0 * (1.0 - pow((float) data->pressure / 100.0f / BME680_SEALEVEL, 0.1903));
+        //data->altitude = 44330.0 * (1.0 - pow((float) data->pressure / 100.0f / BME680_SEALEVEL, 0.1903));
+        data->altitude = (1.0 - pow((float) data->pressure / 100.0f / BME680_SEALEVEL, 0.190284)) * 287.15 / 0.0065;
 				break;
 			} else {
 				dev->delay_ms(BME680_POLL_PERIOD_MS);

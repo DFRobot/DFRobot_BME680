@@ -21,4 +21,4 @@ readHumidity	KEYWORD2
 readPressure	KEYWORD2
 readGas	KEYWORD2
 readAltitude	KEYWORD2
-readGasRisistance	KEYWORD2
+readGasResistance	KEYWORD2

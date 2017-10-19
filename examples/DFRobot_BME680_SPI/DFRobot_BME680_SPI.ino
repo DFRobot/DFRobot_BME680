@@ -35,8 +35,6 @@ void loop()
   Serial.println(bme.readPressure());
   Serial.print("humidity(%rh) :");
   Serial.println(bme.readHumidity(), 2);
-  Serial.print("gas(ppm) :");
-  Serial.println(bme.readGas());
   Serial.print("gas resistance(ohm) :");
   Serial.println(bme.readGasResistance());
   Serial.print("altitude(m) :");
