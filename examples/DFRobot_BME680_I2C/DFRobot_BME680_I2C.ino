@@ -1,16 +1,12 @@
 #include "DFRobot_BME680_I2C.h"
 #include "Wire.h"
 
-#ifdef __AVR__
-#elif defined ESP_PLATFORM
-#elif defined __ets__
-#else
-  #error unknow board
-#endif
+/*use an accurate altitude to calibrate sea level air pressure*/
+#define CALIBRATE_PRESSURE
 
 DFRobot_BME680_I2C bme(0x77);  //0x77 I2C address
 
-
+float seaLevel; 
 void setup()
 {
   Serial.begin(115200);
@@ -18,6 +14,18 @@ void setup()
   delay(1000);
   Serial.println();
   Serial.print(bme.begin());
+  #ifdef CALIBRATE_PRESSURE
+  bme.startConvert();
+  delay(1000);
+  bme.update();
+  /*You can use an accurate altitude to calibrate sea level air pressure. 
+   *And then use this calibrated sea level pressure as a reference to obtain the calibrated altitude.
+   *In this case,525.0m is chendu accurate altitude.
+   */
+  seaLevel = bme.readSeaLevel(525.0);
+  Serial.print("seaLevel :");
+  Serial.println(seaLevel);
+  #endif
 }
 
 void loop()
@@ -36,4 +44,8 @@ void loop()
   Serial.println(bme.readGasResistance());
   Serial.print("altitude(m) :");
   Serial.println(bme.readAltitude());
+  #ifdef CALIBRATE_PRESSURE
+  Serial.print("calibrated altitude(m) :");
+  Serial.println(bme.reaCalibratedAltitude(seaLevel));
+  #endif
 }

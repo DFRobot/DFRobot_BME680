@@ -22,3 +22,4 @@ readPressure	KEYWORD2
 readGas	KEYWORD2
 readAltitude	KEYWORD2
 readGasResistance	KEYWORD2
+reaCalibratedAltitude	KEYWORD2
