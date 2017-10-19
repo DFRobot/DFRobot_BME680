@@ -1,5 +1,6 @@
-#include "DFRobot_BME680_I2C.h"
+#include "DFRobot_BME680_SPI.h"
 #include "Wire.h"
+#include "SPI.h"
 
 /*use an accurate altitude to calibrate sea level air pressure*/
 #define CALIBRATE_PRESSURE
