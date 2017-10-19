@@ -501,7 +501,7 @@ class DFRobot_BME680
     float         readPressure(void);
     float         readHumidity(void);
     float         readAltitude(void);
-    float         reaCalibratedAltitude(float seaLevel);
+    float         readCalibratedAltitude(float seaLevel);
     float         readGasResistance(void);
     float         readSeaLevel(float altitude);
 };
