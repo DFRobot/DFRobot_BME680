@@ -1,5 +1,6 @@
 #include "DFRobot_BME680_SPI.h"
 #include "SPI.h"
+#include "Wire.h"
 
 #ifdef __AVR__
 const uint8_t bme_cs = 3;
