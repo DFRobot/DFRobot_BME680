@@ -64,7 +64,7 @@ boolean DFRobot_BME680::begin(void)
 {
   bme680_sensor.dev_id = this->bme680_I2CAddr;
   if(bme680_init(&bme680_sensor) != BME680_OK) {
-    return true;
+    return false;
   }
   uint8_t set_required_settings;
   int8_t        rslt = 0;
@@ -106,7 +106,7 @@ boolean DFRobot_BME680::begin(void)
 	uint16_t meas_period;
 	bme680_get_profile_dur(&meas_period, &bme680_sensor);
 	bme680_sensor.delay_ms(meas_period); /* Delay till the measurement is ready */
-  return false;
+  return true;
 }
 
 
