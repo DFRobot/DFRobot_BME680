@@ -435,7 +435,7 @@ struct	bme680_gas_sett {
 /*!
  * @brief BME680 device structure
  */
-struct	 {
+struct	bme680_dev {
 	/*! Chip Id */
 	uint8_t chip_id;
 	/*! Device Id */
@@ -474,17 +474,17 @@ enum eBME680_INTERFACE {
 };
 
 
-int8_t bme680_init(struct  *dev);
-int8_t bme680_set_regs(const uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, struct  *dev);
-int8_t bme680_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint16_t len, struct  *dev);
-int8_t bme680_soft_reset(struct  *dev);
-int8_t bme680_set_sensor_mode(struct  *dev);
-int8_t bme680_get_sensor_mode(struct  *dev);
-void bme680_set_profile_dur(uint16_t duration, struct  *dev);
-void bme680_get_profile_dur(uint16_t *duration, struct  *dev);
-int8_t bme680_get_sensor_data(struct bme680_field_data *data, struct  *dev);
-int8_t bme680_set_sensor_settings(uint16_t desired_settings, struct  *dev);
-int8_t bme680_get_sensor_settings(uint16_t desired_settings, struct  *dev);
+int8_t bme680_init(struct bme680_dev *dev);
+int8_t bme680_set_regs(const uint8_t *reg_addr, const uint8_t *reg_data, uint8_t len, struct bme680_dev *dev);
+int8_t bme680_get_regs(uint8_t reg_addr, uint8_t *reg_data, uint16_t len, struct bme680_dev *dev);
+int8_t bme680_soft_reset(struct bme680_dev *dev);
+int8_t bme680_set_sensor_mode(struct bme680_dev *dev);
+int8_t bme680_get_sensor_mode(struct bme680_dev *dev);
+void bme680_set_profile_dur(uint16_t duration, struct bme680_dev *dev);
+void bme680_get_profile_dur(uint16_t *duration, struct bme680_dev *dev);
+int8_t bme680_get_sensor_data(struct bme680_field_data *data, struct bme680_dev *dev);
+int8_t bme680_set_sensor_settings(uint16_t desired_settings, struct bme680_dev *dev);
+int8_t bme680_get_sensor_settings(uint16_t desired_settings, struct bme680_dev *dev);
 
 
 class DFRobot_BME680
