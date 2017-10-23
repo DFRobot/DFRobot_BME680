@@ -6,7 +6,7 @@
 
 class DFRobot_BME680_I2C : public DFRobot_BME680
 {
-  public:
+public:
     DFRobot_BME680_I2C(uint8_t I2CAddr);
 };
 
