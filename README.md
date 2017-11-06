@@ -3,7 +3,7 @@ BME680 is an integrated environmental sensor developed specifically for mobile a
 
 ![SVG1](https://raw.githubusercontent.com/DFRobot/binaryfiles/master/SEN0248/SEN0248svg1.png)
 
-## DFRobot_EINKBWR_IL0376F Library for Arduino
+## DFRobot_BME680 Library for Arduino
 ---------------------------------------------------------
 Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C over SPI.
 
