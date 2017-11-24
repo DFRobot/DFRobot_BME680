@@ -1,21 +1,10 @@
-#include "DFRobot_BME680_SPI.h"
-#include "SPI.h"
+#include "DFRobot_BME680_I2C.h"
 #include "Wire.h"
-
-#ifdef __AVR__
-const uint8_t bme_cs = 3;
-#elif defined ESP_PLATFORM
-const uint8_t bme_cs = D3;
-#elif defined __ets__
-const uint8_t bme_cs = D3;
-#else
-  #error unknow board
-#endif
 
 /*use an accurate altitude to calibrate sea level air pressure*/
 #define CALIBRATE_PRESSURE
 
-DFRobot_BME680_SPI bme(bme_cs);
+DFRobot_BME680_I2C bme(0x77);  //0x77 I2C address
 
 float seaLevel; 
 void setup()
@@ -57,6 +46,6 @@ void loop()
   Serial.println(bme.readAltitude());
   #ifdef CALIBRATE_PRESSURE
   Serial.print("calibrated altitude(m) :");
-  Serial.println(bme.readCalibratedAltitude(seaLevel));
+  Serial.println(bme.reaCalibratedAltitude(seaLevel));
   #endif
 }

@@ -94,6 +94,7 @@
  */
 int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint8_t data_len)
 {
+    Wire.setClock(400000);
     Wire.beginTransmission(dev_addr);
     Wire.write(reg_addr);    /* Set register address to start writing to */
  
@@ -118,6 +119,7 @@ int8_t bus_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint
 int8_t bus_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data_ptr, uint8_t data_len)
 {
     int8_t comResult = 0;
+    Wire.setClock(400000);
     Wire.beginTransmission(dev_addr);
     Wire.write(reg_addr);                    /* Set register address to start reading from */
     comResult = Wire.endTransmission();
@@ -157,6 +159,11 @@ int64_t get_timestamp_us()
     return (int64_t) millis() * 1000;
 }
 
+float convertAltitude(float pressure, float seaLevel)
+{
+  return (44330 * (1.0 - pow(pressure / 100 / seaLevel, 0.1903)));
+}
+
 /*!
  * @brief           Handling of the ready outputs
  *
@@ -182,11 +189,18 @@ void output_ready(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temp
       Serial.print(temperature);
       Serial.print("| rH: ");
       Serial.print(humidity);
+      Serial.print("| pa: ");
+      Serial.print(pressure);
+      Serial.print("| alt: ");
+      Serial.print(convertAltitude(pressure, 1013.25f));
       Serial.print("| IAQ: ");
       Serial.print(iaq);
-      Serial.print(" (");
-      Serial.print(iaq_accuracy);
-      Serial.println(")");
+      if(iaq <= 50) Serial.println(" good");
+      else if(iaq <= 100) Serial.println(" average");
+      else if(iaq <= 150) Serial.println(" little bad");
+      else if(iaq <= 200) Serial.println(" bad");
+      else if(iaq <= 300) Serial.println(" worse");
+      else if(iaq <= 500) Serial.println(" very bad");
 }
 
 /*!
@@ -209,11 +223,16 @@ void setup()
     bsec_iot_init(BSEC_SAMPLE_RATE_LP, 0.0f, bus_write, bus_read, sleep);
     
     /* Call to endless loop function which reads and processes data based on sensor settings */
-    bsec_iot_loop(sleep, get_timestamp_us, output_ready);
+    //bsec_iot_loop(sleep, get_timestamp_us, output_ready);
 }
 
+
+#define WAIT_TIME        3000
 void loop()
 {
+  //every WAIT_TIME milliseconds read and output once, typical: spend 250 milliseconds
+  bsec_iot_loop(sleep, get_timestamp_us, output_ready, WAIT_TIME);
+  //do your jobs flow, please finish it in (WAIT_TIME - 250) milliseconds
 }
 
 /*! @}*/

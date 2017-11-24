@@ -125,9 +125,9 @@ void bsec_iot_init(float sample_rate, float temperature_offset, sensor_write bus
  * @param[in]   get_timestamp_us    pointer to the system specific timestamp derivation function
  * @param[in]   output_ready        pointer to the function processing obtained BSEC outputs
  *
- * @return      none
+ * @return      result
  */ 
-void bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready);
+int32_t bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready, uint32_t t);
 
 #ifdef __cplusplus
 }

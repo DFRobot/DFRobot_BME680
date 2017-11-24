@@ -492,7 +492,7 @@ class DFRobot_BME680
   public:
     DFRobot_BME680(bme680_com_fptr_t readReg, bme680_com_fptr_t writeReg, bme680_delay_fptr_t delayMS, eBME680_INTERFACE interface);
 
-    uint8_t       bme680_I2CAddr;
+    uint8_t       bme680_I2CAddr = 0;
 
     boolean       begin(void);
     void          update(void);
@@ -501,7 +501,7 @@ class DFRobot_BME680
     float         readPressure(void);
     float         readHumidity(void);
     float         readAltitude(void);
-    float         readCalibratedAltitude(float seaLevel);
+    float         reaCalibratedAltitude(float seaLevel);
     float         readGasResistance(void);
     float         readSeaLevel(float altitude);
 };

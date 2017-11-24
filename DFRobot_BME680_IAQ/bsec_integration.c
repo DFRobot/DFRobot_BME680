@@ -79,6 +79,7 @@
 #include <stdint.h>
 #include "bsec_integration.h"
 #include "bsec_interface.h"
+#include "Arduino.h"
 
 /**********************************************************************************************************************/
 /* local macro definitions */
@@ -431,50 +432,115 @@ static void bme680_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec
  *
  * @return      none
  */
-void bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready)
-{
-    /* Timestamp variables */
-    int64_t time_stamp = 0;
-    int64_t time_stamp_trigger = 0;
-    int64_t time_stamp_interval_ms = 0;
-    
-    /* Allocate enough memory for up to 4 physical inputs thus array size of 4 given in case of bsec_inputs */
-    bsec_input_t bsec_inputs[5];
-    
-    /* Number of inputs to BSEC */
-    uint8_t num_bsec_inputs = 0;
-    
-    /* BSEC sensor settings struct */
-    bsec_bme_settings_t sensor_settings;
-    
-    bsec_library_return_t bsec_status = BSEC_OK;
+typedef struct sMillis_TypeDef {
+  unsigned long       lastTime;
+  uint8_t             isStart : 1;
+} sMillis_t;
 
-    while (1)
-    {
-        /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
-        time_stamp = get_timestamp_us() * 1000;
-        
-        /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
-        bsec_status = bsec_sensor_control(time_stamp, &sensor_settings);
-        
-        /* Trigger a measurement if necessary */
-        bme680_bsec_trigger_measurement(&sensor_settings, sleep);
-        
-        /* Read data from last measurement */
-        num_bsec_inputs = 0;
-        bme680_bsec_read_data(time_stamp, bsec_inputs, &num_bsec_inputs, sensor_settings.process_data);
-        
-        /* Time to invoke BSEC to perform the actual processing */
-        bme680_bsec_process_data(bsec_inputs, num_bsec_inputs, output_ready);
-        
-        /* Compute how long we can sleep until we need to call bsec_sensor_control() next */
-        /* Time_stamp is converted from microseconds to nanoseconds first and then the difference to milliseconds */
-        time_stamp_interval_ms = (sensor_settings.next_call - get_timestamp_us() * 1000) / 1000000;
-        if (time_stamp_interval_ms > 0)
-        {
-            sleep((uint32_t)time_stamp_interval_ms);
-        }
+
+int16_t millisTimeOut(sMillis_t* sMillis, uint32_t t)
+{
+  unsigned long       currentTime = millis();
+  if(sMillis->isStart == 0) {
+    if(t == 0) {
+      return 0;
     }
+    sMillis->isStart = 1;
+    sMillis->lastTime = currentTime;
+    return -1;
+  } else {
+    if((currentTime - sMillis->lastTime) >= t) {
+      sMillis->isStart = 0;
+      return 0;
+    } else {
+      return -1;
+    }
+  }
+}
+
+
+int32_t bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready, uint32_t t)
+{
+    // /* Timestamp variables */
+    // int64_t time_stamp = 0;
+    // int64_t time_stamp_trigger = 0;
+    // int64_t time_stamp_interval_ms = 0;
+    
+    // /* Allocate enough memory for up to 4 physical inputs thus array size of 4 given in case of bsec_inputs */
+    // bsec_input_t bsec_inputs[5];
+    
+    // /* Number of inputs to BSEC */
+    // uint8_t num_bsec_inputs = 0;
+    
+    // /* BSEC sensor settings struct */
+    // bsec_bme_settings_t sensor_settings;
+    
+    // bsec_library_return_t bsec_status = BSEC_OK;
+
+    // while (1)
+    // {
+        // /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
+        // time_stamp = get_timestamp_us() * 1000;
+        
+        // /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
+        // bsec_status = bsec_sensor_control(time_stamp, &sensor_settings);
+        
+        // /* Trigger a measurement if necessary */
+        // bme680_bsec_trigger_measurement(&sensor_settings, sleep);
+        
+        // /* Read data from last measurement */
+        // num_bsec_inputs = 0;
+        // bme680_bsec_read_data(time_stamp, bsec_inputs, &num_bsec_inputs, sensor_settings.process_data);
+        
+        // /* Time to invoke BSEC to perform the actual processing */
+        // bme680_bsec_process_data(bsec_inputs, num_bsec_inputs, output_ready);
+        
+        // /* Compute how long we can sleep until we need to call bsec_sensor_control() next */
+        // /* Time_stamp is converted from microseconds to nanoseconds first and then the difference to milliseconds */
+        // time_stamp_interval_ms = (sensor_settings.next_call - get_timestamp_us() * 1000) / 1000000;
+        // if (time_stamp_interval_ms > 0)
+        // {
+            // sleep((uint32_t)time_stamp_interval_ms);
+        // }
+    // }
+    
+  /* Timestamp variables */
+  static int64_t time_stamp = 0;
+  static int64_t time_stamp_trigger = 0;
+  static int64_t time_stamp_interval_ms = 0;
+  
+  /* Allocate enough memory for up to 4 physical inputs thus array size of 4 given in case of bsec_inputs */
+  static bsec_input_t bsec_inputs[5];
+  
+  /* Number of inputs to BSEC */
+  static uint8_t num_bsec_inputs = 0;
+  
+  /* BSEC sensor settings struct */
+  static bsec_bme_settings_t sensor_settings;
+  
+  static bsec_library_return_t bsec_status = BSEC_OK;
+  
+  static sMillis_t sMillis;
+  unsigned long millisTime = millis();
+  if(millisTimeOut(&sMillis, t) == 0) {
+    /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
+    time_stamp = get_timestamp_us() * 1000;
+    
+    /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
+    bsec_status = bsec_sensor_control(time_stamp, &sensor_settings);
+    
+    /* Trigger a measurement if necessary */
+    bme680_bsec_trigger_measurement(&sensor_settings, sleep);
+    
+    /* Read data from last measurement */
+    num_bsec_inputs = 0;
+    bme680_bsec_read_data(time_stamp, bsec_inputs, &num_bsec_inputs, sensor_settings.process_data);
+    
+    /* Time to invoke BSEC to perform the actual processing */
+    bme680_bsec_process_data(bsec_inputs, num_bsec_inputs, output_ready);
+    return (millis() - millisTime);
+  }
+  return -1;
 }
 
 /*! @}*/

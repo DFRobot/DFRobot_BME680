@@ -5,7 +5,7 @@
 
 class DFRobot_BME680_SPI : public DFRobot_BME680
 {
-public:
+  public:
     DFRobot_BME680_SPI(uint8_t pin_cs);
 };
 
