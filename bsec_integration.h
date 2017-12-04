@@ -82,9 +82,12 @@ extern "C"
 /* header files */
 /**********************************************************************************************************************/
 
-/* Use the following bme680 driver: https://github.com/BoschSensortec/BME680_driver/releases/tag/v2.2.0  */
+/* Use the following bme680 driver: https://github.com/BoschSensortec/BME680_driver/releases/tag/bme680_v3.5.1 */
 #include "bme680.h"
+/* BSEC header files are available in the inc/ folder of the release package */
+#include "bsec_interface.h"
 #include "bsec_datatypes.h"
+
 
 /**********************************************************************************************************************/
 /* type definitions */
@@ -100,6 +103,24 @@ typedef int64_t (*get_timestamp_us_fct)();
 typedef void (*output_ready_fct)(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,
     float pressure, float raw_temperature, float raw_humidity, float gas, bsec_library_return_t bsec_status);
 
+/* function pointer to the function loading a previous BSEC state from NVM */
+typedef uint32_t (*state_load_fct)(uint8_t *state_buffer, uint32_t n_buffer);
+
+/* function pointer to the function saving BSEC state to NVM */
+typedef void (*state_save_fct)(const uint8_t *state_buffer, uint32_t length);
+
+/* function pointer to the function loading the BSEC configuration string from NVM */
+typedef uint32_t (*config_load_fct)(uint8_t *state_buffer, uint32_t n_buffer);
+    
+/* structure definitions */
+
+/* Structure with the return value from bsec_iot_init() */
+typedef struct{
+	/*! Result of API execution status */
+	int8_t bme680_status;
+	/*! Result of BSEC library */
+	bsec_library_return_t bsec_status;
+}return_values_init;
 /**********************************************************************************************************************/
 /* function declarations */
 /**********************************************************************************************************************/
@@ -111,23 +132,26 @@ typedef void (*output_ready_fct)(int64_t timestamp, float iaq, uint8_t iaq_accur
  * @param[in]   temperature_offset  device-specific temperature offset (due to self-heating)
  * @param[in]   bus_write           pointer to the bus writing function
  * @param[in]   bus_read            pointer to the bus reading function
- * @param[in]   sleep               pointer to the system specific sleep function
+ * @param[in]   sleep               pointer to the system-specific sleep function
+ * @param[in]   state_load          pointer to the system-specific state load function
  *
- * @return      none
+ * @return      zero if successful, negative otherwise
  */
-void bsec_iot_init(float sample_rate, float temperature_offset, sensor_write bus_write, sensor_read bus_read, 
-    sleep_fct sleep);
+return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bme680_com_fptr_t bus_write, bme680_com_fptr_t bus_read, 
+    sleep_fct sleep, uint8_t addr, enum bme680_intf intf);
 
 /*!
  * @brief       Runs the main (endless) loop that queries sensor settings, applies them, and processes the measured data
  *
- * @param[in]   sleep               pointer to the system specific sleep function
- * @param[in]   get_timestamp_us    pointer to the system specific timestamp derivation function
+ * @param[in]   sleep               pointer to the system-specific sleep function
+ * @param[in]   get_timestamp_us    pointer to the system-specific timestamp derivation function
  * @param[in]   output_ready        pointer to the function processing obtained BSEC outputs
+ * @param[in]   state_save          pointer to the system-specific state save function
+ * @param[in]   save_intvl          interval at which BSEC state should be saved (in samples)
  *
- * @return      result
+ * @return      return_values_init	struct with the result of the API and the BSEC library
  */ 
-int32_t bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready, uint32_t t);
+int8_t bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready);
 
 #ifdef __cplusplus
 }

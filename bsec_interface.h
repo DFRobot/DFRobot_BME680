@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016, 2017 Robert Bosch. All Rights Reserved. Confidential.
+ * Copyright (C) 2015, 2016, 2017 Robert Bosch. All Rights Reserved. 
  *
  * Disclaimer
  *
@@ -59,7 +59,7 @@
  */
  /*!
  * 
- * @file		bsec_interface.h
+ * @file        bsec_interface.h
  *
  * @brief
  * Contains the API for BSEC
@@ -147,10 +147,10 @@
  * See also: bsec_version_t
  *
   \code{.c}
-	// Example // 
-	bsec_version_t  version;
-	bsec_get_version(&version);
-	printf("BSEC version: %d.%d.%d.%d",version.major, version.minor, version.major_bugfix, version.minor_bugfix);
+    // Example // 
+    bsec_version_t  version;
+    bsec_get_version(&version);
+    printf("BSEC version: %d.%d.%d.%d",version.major, version.minor, version.major_bugfix, version.minor_bugfix);
  
   \endcode
 */
@@ -173,7 +173,7 @@ bsec_library_return_t bsec_get_version(bsec_version_t * bsec_version_p);
   \code{.c}
  
     // Initialize BSEC library before further use
-	bsec_init();
+    bsec_init();
 
   \endcode
 */
@@ -218,10 +218,10 @@ bsec_library_return_t bsec_init(void);
  *  - To disable BSEC, all outputs shall be turned off. Only enabled (subscribed) outputs have to be disabled while 
  *    already disabled outputs do not have to be disabled explicitly.
  *
- * @param[in]		requested_virtual_sensors		Pointer to array of requested virtual sensor (output) configurations for the library
- * @param[in]		n_requested_virtual_sensors		Number of virtual sensor structs pointed by requested_virtual_sensors
- * @param[out]		required_sensor_settings		Pointer to array of required physical sensor configurations for the library
- * @param[in,out]	n_required_sensor_settings		[in] Size of allocated required_sensor_settings array, [out] number of sensor configurations returned
+ * @param[in]       requested_virtual_sensors       Pointer to array of requested virtual sensor (output) configurations for the library
+ * @param[in]       n_requested_virtual_sensors     Number of virtual sensor structs pointed by requested_virtual_sensors
+ * @param[out]      required_sensor_settings        Pointer to array of required physical sensor configurations for the library
+ * @param[in,out]   n_required_sensor_settings      [in] Size of allocated required_sensor_settings array, [out] number of sensor configurations returned
  *
  * @return Zero when successful, otherwise an error code
  *
@@ -230,31 +230,31 @@ bsec_library_return_t bsec_init(void);
  * @sa bsec_virtual_sensor_t
  *
   \code{.c}
-	// Example //
+    // Example //
 
-	// Change 3 virtual sensors (switch IAQ and raw temperature -> on / pressure -> off) 
-	bsec_sensor_configuration_t requested_virtual_sensors[3];
-	uint8_t n_requested_virtual_sensors = 3;
+    // Change 3 virtual sensors (switch IAQ and raw temperature -> on / pressure -> off) 
+    bsec_sensor_configuration_t requested_virtual_sensors[3];
+    uint8_t n_requested_virtual_sensors = 3;
  
-	requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ_ESTIMATE;
-	requested_virtual_sensors[0].sample_rate = BSEC_SAMPLE_RATE_ULP; 
-	requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_RAW_TEMPERATURE;
-	requested_virtual_sensors[1].sample_rate = BSEC_SAMPLE_RATE_ULP; 
-	requested_virtual_sensors[2].sensor_id = BSEC_OUTPUT_RAW_PRESSURE;
-	requested_virtual_sensors[2].sample_rate = BSEC_SAMPLE_RATE_DISABLED; 
-	
-	// Allocate a struct for the returned phyisical sensor settings
-	bsec_sensor_configuration_t required_sensor_settings[BSEC_MAX_PHYSICAL_SENSOR];
-	uint8_t  n_required_sensor_settings = BSEC_MAX_PHYSICAL_SENSOR;
+    requested_virtual_sensors[0].sensor_id = BSEC_OUTPUT_IAQ_ESTIMATE;
+    requested_virtual_sensors[0].sample_rate = BSEC_SAMPLE_RATE_ULP; 
+    requested_virtual_sensors[1].sensor_id = BSEC_OUTPUT_RAW_TEMPERATURE;
+    requested_virtual_sensors[1].sample_rate = BSEC_SAMPLE_RATE_ULP; 
+    requested_virtual_sensors[2].sensor_id = BSEC_OUTPUT_RAW_PRESSURE;
+    requested_virtual_sensors[2].sample_rate = BSEC_SAMPLE_RATE_DISABLED; 
+    
+    // Allocate a struct for the returned phyisical sensor settings
+    bsec_sensor_configuration_t required_sensor_settings[BSEC_MAX_PHYSICAL_SENSOR];
+    uint8_t  n_required_sensor_settings = BSEC_MAX_PHYSICAL_SENSOR;
  
     // Call bsec_update_subscription() to enable/disable the requested virtual sensors
-	bsec_update_subscription(requested_virtual_sensors, n_requested_virtual_sensors, required_sensor_settings, &n_required_sensor_settings);
+    bsec_update_subscription(requested_virtual_sensors, n_requested_virtual_sensors, required_sensor_settings, &n_required_sensor_settings);
   \endcode
  *
  */
 bsec_library_return_t bsec_update_subscription(const bsec_sensor_configuration_t * const requested_virtual_sensors,
-				const uint8_t n_requested_virtual_sensors, bsec_sensor_configuration_t * required_sensor_settings,
-				uint8_t * n_required_sensor_settings);
+                const uint8_t n_requested_virtual_sensors, bsec_sensor_configuration_t * required_sensor_settings,
+                uint8_t * n_required_sensor_settings);
 
 
 /*!
@@ -283,62 +283,62 @@ bsec_library_return_t bsec_update_subscription(const bsec_sensor_configuration_t
  * once.
  *
  *
- * @param[in]		inputs			Array of input data samples. Each array element represents a sample of a different physical sensor.
- * @param[in]		n_inputs		Number of passed input data structs.
- * @param[out]		outputs			Array of output data samples. Each array element represents a sample of a different virtual sensor.
- * @param[in,out]	n_outputs		[in] Number of allocated output structs, [out] number of outputs returned
+ * @param[in]       inputs          Array of input data samples. Each array element represents a sample of a different physical sensor.
+ * @param[in]       n_inputs        Number of passed input data structs.
+ * @param[out]      outputs         Array of output data samples. Each array element represents a sample of a different virtual sensor.
+ * @param[in,out]   n_outputs       [in] Number of allocated output structs, [out] number of outputs returned
  *
  * @return Zero when successful, otherwise an error code
  *
 
  \code{.c}
-	// Example //
-		
-	// Allocate input and output memory
-  	bsec_input_t input[3];
-	uint8_t n_input = 3;
-	bsec_output_t output[2];
-	uint8_t  n_output=2;
+    // Example //
+        
+    // Allocate input and output memory
+    bsec_input_t input[3];
+    uint8_t n_input = 3;
+    bsec_output_t output[2];
+    uint8_t  n_output=2;
 
-	bsec_library_return_t status;
+    bsec_library_return_t status;
 
-	// Populate the input structs, assuming the we have timestamp (ts), 
-	// gas sensor resistance (R), temperature (T), and humidity (rH) available
-	// as input variables
-	input[0].sensor_id = BSEC_INPUT_GASRESISTOR;
-	input[0].signal = R;
-	input[0].time_stamp= ts;   
-	input[1].sensor_id = BSEC_INPUT_TEMPERATURE;   
-	input[1].signal = T;   
-	input[1].time_stamp= ts;   
-	input[2].sensor_id = BSEC_INPUT_HUMIDITY;
-	input[2].signal = rH;
-	input[2].time_stamp= ts;   
+    // Populate the input structs, assuming the we have timestamp (ts), 
+    // gas sensor resistance (R), temperature (T), and humidity (rH) available
+    // as input variables
+    input[0].sensor_id = BSEC_INPUT_GASRESISTOR;
+    input[0].signal = R;
+    input[0].time_stamp= ts;   
+    input[1].sensor_id = BSEC_INPUT_TEMPERATURE;   
+    input[1].signal = T;   
+    input[1].time_stamp= ts;   
+    input[2].sensor_id = BSEC_INPUT_HUMIDITY;
+    input[2].signal = rH;
+    input[2].time_stamp= ts;   
 
-		
-	// Invoke main processing BSEC function
-	status = bsec_do_steps( input, n_input, output, &n_output );
+        
+    // Invoke main processing BSEC function
+    status = bsec_do_steps( input, n_input, output, &n_output );
 
-	// Iterature through the BSEC output data, if the call succeeded
-	if(status == BSEC_OK)
-	{
-		for(int i = 0; i < n_output; i++)
-		{   
-			switch(output[i].sensor_id)
-			{
-				case BSEC_OUTPUT_IAQ_ESTIMATE:
-					// Retrieve the IAQ results from output[i].signal
-					// and do something with the data
-					break;
-				case BSEC_OUTPUT_AMBIENT_TEMPERATURE:
-					// Retrieve the ambient temperature results from output[i].signal
-					// and do something with the data
-					break;
-				
-			}
-		}
-	}
-  	
+    // Iterature through the BSEC output data, if the call succeeded
+    if(status == BSEC_OK)
+    {
+        for(int i = 0; i < n_output; i++)
+        {   
+            switch(output[i].sensor_id)
+            {
+                case BSEC_OUTPUT_IAQ_ESTIMATE:
+                    // Retrieve the IAQ results from output[i].signal
+                    // and do something with the data
+                    break;
+                case BSEC_OUTPUT_AMBIENT_TEMPERATURE:
+                    // Retrieve the ambient temperature results from output[i].signal
+                    // and do something with the data
+                    break;
+                
+            }
+        }
+    }
+    
  \endcode
  */
  
@@ -351,14 +351,14 @@ bsec_library_return_t bsec_do_steps(const bsec_input_t * const inputs, const uin
  * This function allows specific virtual sensor outputs to be reset. The meaning of "reset" depends on the specific 
  * output. In case of the IAQ output, reset means zeroing the output to the current ambient conditions.
  *
- * @param[in]		sensor_id			Virtual sensor to be reset
+ * @param[in]       sensor_id           Virtual sensor to be reset
  *
  * @return Zero when successful, otherwise an error code
  *
  *
   \code{.c}
     // Example // 
-	bsec_reset_output(BSEC_OUTPUT_IAQ_ESTIMATE);
+    bsec_reset_output(BSEC_OUTPUT_IAQ_ESTIMATE);
 
   \endcode
  */
@@ -376,33 +376,33 @@ bsec_library_return_t bsec_reset_output(uint8_t sensor_id);
  * the serialization and apply it to the library and its modules. Please use #BSEC_MAX_PROPERTY_BLOB_SIZE for allotting 
  * the required size.
  *
- * @param[in]		serialized_settings		Settings serialized to a binary blob
- * @param[in]		n_serialized_settings	Size of the settings blob
- * @param[in,out]	work_buffer				Work buffer used to parse the blob
- * @param[in]		n_work_buffer_size		Length of the work buffer available for parsing the blob
+ * @param[in]       serialized_settings     Settings serialized to a binary blob
+ * @param[in]       n_serialized_settings   Size of the settings blob
+ * @param[in,out]   work_buffer             Work buffer used to parse the blob
+ * @param[in]       n_work_buffer_size      Length of the work buffer available for parsing the blob
  *
  * @return Zero when successful, otherwise an error code
  *
   \code{.c}
     // Example // 
-	
-	// Allocate variables
-	uint8_t serialized_settings[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t n_serialized_settings_max = BSEC_MAX_PROPERTY_BLOB_SIZE;
-	uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t n_work_buffer = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    
+    // Allocate variables
+    uint8_t serialized_settings[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t n_serialized_settings_max = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t n_work_buffer = BSEC_MAX_PROPERTY_BLOB_SIZE;
 
-	// Here we will load a provided config string into serialized_settings 
-	
-	// Apply the configuration
-	bsec_set_configuration(serialized_settings, n_serialized_settings_max, work_buffer, n_work_buffer);
+    // Here we will load a provided config string into serialized_settings 
+    
+    // Apply the configuration
+    bsec_set_configuration(serialized_settings, n_serialized_settings_max, work_buffer, n_work_buffer);
 
   \endcode
  */
 
 bsec_library_return_t bsec_set_configuration(const uint8_t * const serialized_settings,
-				const uint32_t n_serialized_settings, uint8_t * work_buffer,
-				const uint32_t n_work_buffer_size);
+                const uint32_t n_serialized_settings, uint8_t * work_buffer,
+                const uint32_t n_work_buffer_size);
 
 
 /*!
@@ -417,32 +417,32 @@ bsec_library_return_t bsec_set_configuration(const uint8_t * const serialized_se
  * serialization and apply it to the library and its modules. Please use #BSEC_MAX_PROPERTY_BLOB_SIZE for allotting the 
  * required size.
  *
- * @param[in]		serialized_state		States serialized to a binary blob
- * @param[in]		n_serialized_state		Size of the state blob
- * @param[in,out]	work_buffer				Work buffer used to parse the blob
- * @param[in]		n_work_buffer_size		Length of the work buffer available for parsing the blob
+ * @param[in]       serialized_state        States serialized to a binary blob
+ * @param[in]       n_serialized_state      Size of the state blob
+ * @param[in,out]   work_buffer             Work buffer used to parse the blob
+ * @param[in]       n_work_buffer_size      Length of the work buffer available for parsing the blob
  *
  * @return Zero when successful, otherwise an error code
  *
   \code{.c}
-	// Example // 
+    // Example // 
   
-	// Allocate variables
-	uint8_t serialized_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t  n_serialized_state = BSEC_MAX_PROPERTY_BLOB_SIZE;
-	uint8_t work_buffer_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t  n_work_buffer_size = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    // Allocate variables
+    uint8_t serialized_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t  n_serialized_state = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    uint8_t work_buffer_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t  n_work_buffer_size = BSEC_MAX_PROPERTY_BLOB_SIZE;
 
-	// Here we will load a state string from a previous use of BSEC
+    // Here we will load a state string from a previous use of BSEC
 
     // Apply the previous state to the current BSEC session
-	bsec_set_state(serialized_state, n_serialized_state, work_buffer_state, n_work_buffer_size);
+    bsec_set_state(serialized_state, n_serialized_state, work_buffer_state, n_work_buffer_size);
 
   \endcode
 */
 
 bsec_library_return_t bsec_set_state(const uint8_t * const serialized_state, const uint32_t n_serialized_state,
-				uint8_t * work_buffer, const uint32_t n_work_buffer_size);
+                uint8_t * work_buffer, const uint32_t n_work_buffer_size);
 
 
 /*!
@@ -457,34 +457,34 @@ bsec_library_return_t bsec_set_state(const uint8_t * const serialized_state, con
  * required size.
  * 
  *
- * @param[in]		config_id					Identifier for a specific set of configuration settings to be returned;
- *												shall be zero to retrieve all configuration settings.
- * @param[out]		serialized_settings			Buffer to hold the serialized config blob
- * @param[in]		n_serialized_settings_max	Maximum available size for the serialized settings
- * @param[in,out]	work_buffer					Work buffer used to parse the binary blob
- * @param[in]		n_work_buffer				Length of the work buffer available for parsing the blob
- * @param[out]		n_serialized_settings		Actual size of the returned serialized configuration blob
+ * @param[in]       config_id                   Identifier for a specific set of configuration settings to be returned;
+ *                                              shall be zero to retrieve all configuration settings.
+ * @param[out]      serialized_settings         Buffer to hold the serialized config blob
+ * @param[in]       n_serialized_settings_max   Maximum available size for the serialized settings
+ * @param[in,out]   work_buffer                 Work buffer used to parse the binary blob
+ * @param[in]       n_work_buffer               Length of the work buffer available for parsing the blob
+ * @param[out]      n_serialized_settings       Actual size of the returned serialized configuration blob
  *
  * @return Zero when successful, otherwise an error code
  *
   \code{.c}
-	// Example //
+    // Example //
  
-	// Allocate variables
-	uint8_t serialized_settings[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t n_serialized_settings_max = BSEC_MAX_PROPERTY_BLOB_SIZE;
-	uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t n_work_buffer = BSEC_MAX_PROPERTY_BLOB_SIZE;
-	uint32_t n_serialized_settings = 0;
-	
-	// Configuration of BSEC algorithm is stored in 'serialized_settings'
-	bsec_get_configuration(0, serialized_settings, n_serialized_settings_max, work_buffer, n_work_buffer, &n_serialized_settings);
+    // Allocate variables
+    uint8_t serialized_settings[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t n_serialized_settings_max = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t n_work_buffer = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    uint32_t n_serialized_settings = 0;
+    
+    // Configuration of BSEC algorithm is stored in 'serialized_settings'
+    bsec_get_configuration(0, serialized_settings, n_serialized_settings_max, work_buffer, n_work_buffer, &n_serialized_settings);
 
   \endcode
  */
 
 bsec_library_return_t bsec_get_configuration(const uint8_t config_id, uint8_t * serialized_settings, const uint32_t n_serialized_settings_max,
-				uint8_t * work_buffer, const uint32_t n_work_buffer, uint32_t * n_serialized_settings);
+                uint8_t * work_buffer, const uint32_t n_work_buffer, uint32_t * n_serialized_settings);
 
 
 /*!
@@ -498,35 +498,35 @@ bsec_library_return_t bsec_get_configuration(const uint8_t config_id, uint8_t * 
  * required size.
  * 
  *
- * @param[in]		state_set_id				Identifier for a specific set of states to be returned; shall be
- *												zero to retrieve all states.
- * @param[out]		serialized_state			Buffer to hold the serialized config blob
- * @param[in]		n_serialized_state_max		Maximum available size for the serialized states
- * @param[in,out]	work_buffer					Work buffer used to parse the blob
- * @param[in]		n_work_buffer				Length of the work buffer available for parsing the blob
- * @param[out]		n_serialized_state			Actual size of the returned serialized blob
+ * @param[in]       state_set_id                Identifier for a specific set of states to be returned; shall be
+ *                                              zero to retrieve all states.
+ * @param[out]      serialized_state            Buffer to hold the serialized config blob
+ * @param[in]       n_serialized_state_max      Maximum available size for the serialized states
+ * @param[in,out]   work_buffer                 Work buffer used to parse the blob
+ * @param[in]       n_work_buffer               Length of the work buffer available for parsing the blob
+ * @param[out]      n_serialized_state          Actual size of the returned serialized blob
  *
  * @return Zero when successful, otherwise an error code
  *
   \code{.c}
-	// Example //
+    // Example //
  
-	// Allocate variables
-	uint8_t serialized_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t n_serialized_state_max=BSEC_MAX_PROPERTY_BLOB_SIZE;
-	uint32_t  n_serialized_state = BSEC_MAX_PROPERTY_BLOB_SIZE;
-	uint8_t work_buffer_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
-	uint32_t  n_work_buffer_size = BSEC_MAX_PROPERTY_BLOB_SIZE;
-	
-	// Algorithm state is stored in 'serialized_state'
-	bsec_get_state(0, serialized_state, n_serialized_state_max, work_buffer_state, n_work_buffer_size, &n_serialized_state);
+    // Allocate variables
+    uint8_t serialized_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t n_serialized_state_max=BSEC_MAX_PROPERTY_BLOB_SIZE;
+    uint32_t  n_serialized_state = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    uint8_t work_buffer_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    uint32_t  n_work_buffer_size = BSEC_MAX_PROPERTY_BLOB_SIZE;
+    
+    // Algorithm state is stored in 'serialized_state'
+    bsec_get_state(0, serialized_state, n_serialized_state_max, work_buffer_state, n_work_buffer_size, &n_serialized_state);
 
   \endcode
  */
 
 bsec_library_return_t bsec_get_state(const uint8_t state_set_id, uint8_t * serialized_state,
-				const uint32_t n_serialized_state_max, uint8_t * work_buffer, const uint32_t n_work_buffer,
-				uint32_t * n_serialized_state);
+                const uint32_t n_serialized_state_max, uint8_t * work_buffer, const uint32_t n_work_buffer,
+                uint32_t * n_serialized_state);
 
 /*!
  * @brief Retrieve BMExxx sensor instructions
@@ -548,7 +548,7 @@ bsec_library_return_t bsec_get_state(const uint8_t state_set_id, uint8_t * seria
  *
  * 
  * @param [in]      time_stamp                Current timestamp in [ns]
- * @param[out]		sensor_settings           Settings to be passed to API to operate sensor at this time instance
+ * @param[out]      sensor_settings           Settings to be passed to API to operate sensor at this time instance
  *
  * @return Zero when successful, otherwise an error code
  */

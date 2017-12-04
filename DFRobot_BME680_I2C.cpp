@@ -30,16 +30,34 @@ static int8_t bme680_i2c_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, 
 }
 
 
-static void bme680_delay_ms(uint32_t period)
+inline static void bme680_delay_ms(uint32_t period)
 {
   delay(period);
 }
 
 
-DFRobot_BME680_I2C::DFRobot_BME680_I2C(uint8_t I2CAddr) :
+inline static int64_t bme680_getus(void)
+{
+  return (millis() * 1000);
+}
+
+
+DFRobot_BME680_I2C::DFRobot_BME680_I2C(uint8_t I2CAddr_) :
                     DFRobot_BME680(bme680_i2c_read, bme680_i2c_write, bme680_delay_ms, eBME680_INTERFACE_I2C)
 {
-  DFRobot_BME680::bme680_I2CAddr = I2CAddr;
+  bme680_I2CAddr = I2CAddr_;
+}
+
+
+void DFRobot_BME680_I2C::setConvertAndUpdate()
+{
+  bsec_iot_init(0.33333f, 0, bme680_i2c_write, bme680_i2c_read, bme680_delay_ms, bme680_I2CAddr, BME680_I2C_INTF);
+}
+
+
+int8_t DFRobot_BME680_I2C::iaqUpdate(void)
+{
+  return bsec_iot_loop(bme680_delay_ms, bme680_getus, bme680_outputReady);
 }
 
 

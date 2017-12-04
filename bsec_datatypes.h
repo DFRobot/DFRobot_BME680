@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016, 2017 Robert Bosch. All Rights Reserved. Confidential.
+ * Copyright (C) 2015, 2016, 2017 Robert Bosch. All Rights Reserved. 
  *
  * Disclaimer
  *
@@ -84,8 +84,8 @@ extern "C"
 #include <stdint.h>
 #include <stddef.h>
 
-#define BSEC_MAX_PHYSICAL_SENSOR     (5)         /*!< Number of physical sensors that need allocated space before calling bsec_update_subscription() */
-#define BSEC_MAX_PROPERTY_BLOB_SIZE  (352)     /*!< Maximum size (in bytes) of the data blobs returned by bsec_get_state() and bsec_get_configuration() */
+#define BSEC_MAX_PHYSICAL_SENSOR     (6)         /*!< Number of physical sensors that need allocated space before calling bsec_update_subscription() */
+#define BSEC_MAX_PROPERTY_BLOB_SIZE  (400)     /*!< Maximum size (in bytes) of the data blobs returned by bsec_get_state() and bsec_get_configuration() */
 #define BSEC_SAMPLE_RATE_DISABLED    (65535.0f)      /*!< Sample rate of a disabled sensor */
 #define BSEC_SAMPLE_RATE_ULP         (0.0033333f)           /*!< Sample rate in case of Ultra Low Power Mode */
 #define BSEC_SAMPLE_RATE_LP          (0.33333f)            /*!< Sample rate in case of Low Power Mode */
@@ -94,8 +94,8 @@ extern "C"
 #define BSEC_PROCESS_TEMPERATURE    (1 << (BSEC_INPUT_TEMPERATURE-1))   /*!< process_data bitfield constant for temperature @sa bsec_bme_settings_t */
 #define BSEC_PROCESS_HUMIDITY       (1 << (BSEC_INPUT_HUMIDITY-1))      /*!< process_data bitfield constant for humidity @sa bsec_bme_settings_t */
 #define BSEC_PROCESS_GAS            (1 << (BSEC_INPUT_GASRESISTOR-1))   /*!< process_data bitfield constant for gas sensor @sa bsec_bme_settings_t */
-#define BSEC_NUMBER_OUTPUTS         (10)     /*!< Number of outputs, depending on solution */
-#define BSEC_OUTPUT_INCLUDED        (13947)         /*!< bitfield that indicates which outputs are included in the solution */
+#define BSEC_NUMBER_OUTPUTS         (13)     /*!< Number of outputs, depending on solution */
+#define BSEC_OUTPUT_INCLUDED        (4250095)         /*!< bitfield that indicates which outputs are included in the solution */
 
 /*!
  * @brief Enumeration for input (physical) sensors.
@@ -152,6 +152,12 @@ typedef enum
      */
     BSEC_INPUT_HEATSOURCE = 14,        
 
+    /**
+     * @brief Additional input for device heat compensation 8
+     *
+     * Generic heatsource 8
+     */
+
 } bsec_physical_sensor_t;
 
 /*!
@@ -184,14 +190,14 @@ typedef enum
      * 
      * @note This value is cross-influenced by the sensor heating and device specific heating.
      */
-    BSEC_OUTPUT_RAW_TEMPERATURE = 4,                
+    BSEC_OUTPUT_RAW_TEMPERATURE = 6,                
 
     /**
      * @brief Pressure sensor signal [Pa]
      * 
      * Pressure directly measured by the BME680 in Pa.
      */
-    BSEC_OUTPUT_RAW_PRESSURE = 5,                   
+    BSEC_OUTPUT_RAW_PRESSURE = 7,                   
 
     /**
      * @brief Relative humidity sensor signal [%] 
@@ -200,7 +206,7 @@ typedef enum
      * 
      * @note This value is cross-influenced by the sensor heating and device specific heating.
      */
-    BSEC_OUTPUT_RAW_HUMIDITY = 6,     
+    BSEC_OUTPUT_RAW_HUMIDITY = 8,     
 
     /**
      * @brief Gas sensor signal [Ohm]
@@ -208,7 +214,7 @@ typedef enum
      * Gas resistance measured directly by the BME680 in Ohm.The restistance value changes due to varying VOC 
      * concentrations (the higher the concentration of reducing VOCs, the lower the resistance and vice versa). 
      */
-    BSEC_OUTPUT_RAW_GAS = 7,                
+    BSEC_OUTPUT_RAW_GAS = 9,                
 
     /**
      * @brief Gas sensor stabilization status [boolean]
@@ -216,7 +222,7 @@ typedef enum
      * Indicates initial stabilization status of the gas sensor element: stabilization is ongoing (0) or stablization 
      * is finished (1).   
      */
-    BSEC_OUTPUT_STABILIZATION_STATUS = 10,                 
+    BSEC_OUTPUT_STABILIZATION_STATUS = 12,                 
 
     /**
      * @brief Gas sensor run-in status [boolean]
@@ -224,7 +230,7 @@ typedef enum
      * Indicates power-on stabilization status of the gas sensor element: stabilization is ongoing (0) or stablization 
      * is finished (1).
      */
-    BSEC_OUTPUT_RUN_IN_STATUS = 11,                         
+    BSEC_OUTPUT_RUN_IN_STATUS = 13,                         
 
     /**
      * @brief Sensor heat compensated temperature [degrees Celcius]
@@ -243,7 +249,7 @@ typedef enum
      * The self-heating in operation mode BSEC_SAMPLE_RATE_ULP is negligible.
      * The self-heating in operation mode BSEC_SAMPLE_RATE_LP is supported for 1.8V by default (no config file required). If the BME680 sensor supply voltage is 3.3V, the IoT_LP_3_3V.config shall be used.
      */
-    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE = 13,   
+    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_TEMPERATURE = 15,   
 
     /**
      * @brief Sensor heat compensated humidity [%] 
@@ -256,7 +262,7 @@ typedef enum
      * @note IAQ soultion: If ::BSEC_INPUT_HEATSOURCE is used for device specific temperature compensation, it will be 
      * effective for ::BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY too.
      */
-    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY = 14,     
+    BSEC_OUTPUT_SENSOR_HEAT_COMPENSATED_HUMIDITY = 16,     
 
 } bsec_virtual_sensor_t;
 
@@ -293,7 +299,7 @@ typedef enum
     BSEC_E_CONFIG_INSUFFICIENTBUFFER = -41,         /*!< String buffer nsufficient to hold serialized data from BSEC library */
     BSEC_E_SET_INVALIDCHANNELIDENTIFIER = -100,     /*!< Internal error code */
     BSEC_E_SET_INVALIDLENGTH = -104,                /*!< Internal error code */
-    BSEC_W_SC_CALL_TIMING_VIOLATION = 100           /*!< Difference between actual and defined sampling intervals of bsec_sensor_control() greater than allowed */
+    BSEC_W_SC_CALL_TIMING_VIOLATION = 100,          /*!< Difference between actual and defined sampling intervals of bsec_sensor_control() greater than allowed */
 } bsec_library_return_t;
 
 /*!
@@ -382,12 +388,12 @@ typedef struct
      *   performed automatically in the background if the sensor is exposed to clean and polluted air for approximately 
      *   30 minutes each.
      * 
-     *   | Virtual sensor             | Value |  Accuracy description                                     |
-     *   |----------------------------|-------|-----------------------------------------------------------|
-     *   | IAQ                        |   0   | The sensor is not yet stablized or in a run-in status     |
-     *   |                            |   1   | Calibration required                                      |
-     *   |                            |   2   | Not applicable                                            |
-     *   |                            |   3   | Calibration is done, now IAQ estimate is highly accurate  |
+     *   | Virtual sensor             | Value |  Accuracy description                                           |
+     *   |----------------------------|-------|-----------------------------------------------------------------|
+     *   | IAQ                        |   0   | The sensor is not yet stablized or in a run-in status           |
+     *   |                            |   1   | Calibration required                                            |
+     *   |                            |   2   | Calibration on-going                                            |
+     *   |                            |   3   | Calibration is done, now IAQ estimate achieves best perfomance  |
      */     
     uint8_t accuracy;           
 } bsec_output_t;

@@ -125,10 +125,8 @@ Arduino leonardo |      √       |             |            |
 
 ## History
 
+- Dec 4, 2017 - Version 2.0.0 released.
 - Sep 4, 2017 - Version 1.0.0 released.
-- Sep 28, 2017 - Version 1.1.0 released.
-- Oct 11, 2017 - Version 2.0.0 released.
-- Oct 19, 2017 - Version 2.1.0 released.
 
 ## Credits
 

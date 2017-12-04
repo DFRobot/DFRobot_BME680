@@ -77,15 +77,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+
 #include "bsec_integration.h"
-#include "bsec_interface.h"
+
 #include "Arduino.h"
 
 /**********************************************************************************************************************/
 /* local macro definitions */
 /**********************************************************************************************************************/
 
-#define FIELD_COUNT 1
 #define NUM_USED_OUTPUTS 7
 
 /**********************************************************************************************************************/
@@ -93,7 +93,7 @@
 /**********************************************************************************************************************/
 
 /* Global sensor APIs data structure */
-static struct bme680_t bme680_g;
+static struct bme680_dev bme680_g;
 
 /* Global temperature offset to be subtracted */
 static float bme680_temperature_offset_g = 0.0f;
@@ -106,23 +106,18 @@ static float bme680_temperature_offset_g = 0.0f;
  * @brief        Virtual sensor subscription
  *               Please call this function before processing of data using bsec_do_steps function
  *
- * @param[in]   sample_rate         mode to be used (either BSEC_SAMPLE_RATE_ULP or BSEC_SAMPLE_RATE_LP)
+ * @param[in]    sample_rate         mode to be used (either BSEC_SAMPLE_RATE_ULP or BSEC_SAMPLE_RATE_LP)
  *  
  * @return       subscription result, zero when successful
  */
 static bsec_library_return_t bme680_bsec_update_subscription(float sample_rate)
 {
-    /* Enable some desired virtual sensor, array size of requested_virtual_sensors to be provided */
-    /* Intend to request four virtual sensors here, so giving the array size as 4, and thus */
-    /* n_requested_virtual_sensors initialized to 4 */
     bsec_sensor_configuration_t requested_virtual_sensors[NUM_USED_OUTPUTS];
-    
-    /* Number of virtual sensors */
     uint8_t n_requested_virtual_sensors = NUM_USED_OUTPUTS;
-    bsec_sensor_configuration_t required_sensor_settings[BSEC_MAX_PHYSICAL_SENSOR];
     
-    /* Provide information about size of structure required_sensor_settings */
+    bsec_sensor_configuration_t required_sensor_settings[BSEC_MAX_PHYSICAL_SENSOR];
     uint8_t n_required_sensor_settings = BSEC_MAX_PHYSICAL_SENSOR;
+    
     bsec_library_return_t status = BSEC_OK;
     
     /* note: Virtual sensors as desired to be added here */
@@ -156,35 +151,55 @@ static bsec_library_return_t bme680_bsec_update_subscription(float sample_rate)
  * @param[in]   bus_write           pointer to the bus writing function
  * @param[in]   bus_read            pointer to the bus reading function
  * @param[in]   sleep               pointer to the system specific sleep function
+ * @param[in]   state_load          pointer to the system-specific state load function
+ * @param[in]   config_load         pointer to the system-specific config load function
  *
- * @return      none
+ * @return      zero if successful, negative otherwise
  */
-void bsec_iot_init(float sample_rate, float temperature_offset, sensor_write bus_write, sensor_read bus_read, sleep_fct sleep)
+return_values_init bsec_iot_init(float sample_rate, float temperature_offset, bme680_com_fptr_t bus_write, 
+                    bme680_com_fptr_t bus_read, sleep_fct sleep, uint8_t addr, enum bme680_intf intf)
 {
-    
-    enum bme680_return_type bme680_status = BME680_COMM_RES_OK;
+    return_values_init ret = {BME680_OK, BSEC_OK};
     bsec_library_return_t bsec_status = BSEC_OK;
     
+    uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
+    uint8_t bsec_config[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
+    uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE] = {0};
+    int bsec_state_len, bsec_config_len;
+    
     /* Fixed I2C configuration */
-    //bme680_g.dev_addr = BME680_I2C_ADDR_PRIMARY;
-    bme680_g.dev_addr = BME680_I2C_ADDR_SECONDARY;
-    bme680_g.interface = BME680_I2C_INTERFACE;
+    bme680_g.dev_id = addr;
+    bme680_g.intf = intf;
     /* User configurable I2C configuration */
-    bme680_g.bme680_bus_write = bus_write;
-    bme680_g.bme680_bus_read = bus_read;
-    bme680_g.delay_msec = sleep;
+    bme680_g.write = bus_write;
+    bme680_g.read = bus_read;
+    bme680_g.delay_ms = sleep;
     
     /* Initialize BME680 API */
-    bme680_status = bme680_init(&bme680_g);
+    ret.bme680_status = bme680_init(&bme680_g);
+	if (ret.bme680_status != BME680_OK)
+	{
+		return ret;
+	}
     
     /* Initialize BSEC library */
-    bsec_status = bsec_init();
+    ret.bsec_status = bsec_init();
+    if (ret.bsec_status != BSEC_OK)
+    {
+        return ret;
+    }
     
     /* Set temperature offset */
     bme680_temperature_offset_g = temperature_offset;
     
     /* Call to the function which sets the library with subscription information */
-    bsec_status = bme680_bsec_update_subscription(sample_rate);
+    ret.bsec_status = bme680_bsec_update_subscription(sample_rate);
+    if (ret.bsec_status != BSEC_OK)
+    {
+        return ret;
+    }
+    
+    return ret;
 }
 
 /*!
@@ -195,66 +210,42 @@ void bsec_iot_init(float sample_rate, float temperature_offset, sensor_write bus
  *
  * @return      none
  */
-static void bme680_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings, sleep_fct sleep)
+static uint32_t bme680_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings, sleep_fct sleep)
 {
-    float t_ms = 0;
-    u8 operation_mode = 0;
-    enum bme680_return_type bme680_status = BME680_COMM_RES_OK;
-    
-    static struct bme680_sens_conf sens_conf;
-    static struct bme680_heater_conf heater_conf;
-    
+	uint16_t meas_period;
+	uint8_t set_required_settings;
+    int8_t bme680_status = BME680_OK;
+        
     /* Check if a forced-mode measurement should be triggered now */
     if (sensor_settings->trigger_measurement)
     {
         /* Set sensor configuration */
-        sens_conf.heatr_ctrl = BME680_HEATR_CTRL_ENABLE;
-        sens_conf.run_gas = (enum bme680_run_gas) sensor_settings->run_gas;
-        sens_conf.nb_conv = 0x00;
-        sens_conf.osrs_hum = (enum bme680_osrs_x) sensor_settings->humidity_oversampling;
-        sens_conf.osrs_pres = (enum bme680_osrs_x) sensor_settings->pressure_oversampling;
-        sens_conf.osrs_temp = (enum bme680_osrs_x) sensor_settings->temperature_oversampling;
-        bme680_status = bme680_set_sensor_config(&sens_conf, &bme680_g);
-        
-        /* Set heater configuration only if run_gas is enabled in sensor_settings */
-        if (sensor_settings->run_gas  == BME680_RUN_GAS_ENABLE)
-        {
-            heater_conf.heater_temp[0] = sensor_settings->heater_temperature;
-            heater_conf.heatr_dur[0] = sensor_settings->heating_duration;
-            heater_conf.profile_cnt = 1;
-            bme680_status = bme680_set_gas_heater_config(&heater_conf, &bme680_g);
-        }
-        
+
+        bme680_g.tph_sett.os_hum  = sensor_settings->humidity_oversampling;
+        bme680_g.tph_sett.os_pres = sensor_settings->pressure_oversampling;
+        bme680_g.tph_sett.os_temp = sensor_settings->temperature_oversampling;
+		bme680_g.gas_sett.run_gas = sensor_settings->run_gas;
+		bme680_g.gas_sett.heatr_temp = sensor_settings->heater_temperature; /* degree Celsius */
+		bme680_g.gas_sett.heatr_dur  = sensor_settings->heating_duration; /* milliseconds */
+		
+		/* Select the power mode */
+		/* Must be set before writing the sensor configuration */
+		bme680_g.power_mode = BME680_FORCED_MODE;
+		/* Set the required sensor settings needed */
+		set_required_settings = BME680_OST_SEL | BME680_OSP_SEL | BME680_OSH_SEL | BME680_GAS_SENSOR_SEL;
+		
+		/* Set the desired sensor configuration */
+        bme680_status = bme680_set_sensor_settings(set_required_settings, &bme680_g);
+             
         /* Set power mode as forced mode and trigger forced mode measurement */
-        bme680_status = bme680_set_power_mode(BME680_FORCED_MODE, &bme680_g);
+        bme680_status = bme680_set_sensor_mode(&bme680_g);
         
-        /* Calculate the sleep time required based on oversampling and heating_duration in sensor_settings */
-        t_ms = 1.0f;
-        t_ms += (1 << sensor_settings->temperature_oversampling) + 0.5;
-        t_ms += (1 << sensor_settings->pressure_oversampling) + 0.5;
-        t_ms += (1 << sensor_settings->humidity_oversampling) + 0.5;
+		/* Get the total measurement duration so as to sleep or wait till the measurement is complete */
+		bme680_get_profile_dur(&meas_period, &bme680_g);
         
-        if (sensor_settings->run_gas)
-        {
-            t_ms += sensor_settings->heating_duration + 2.5;
-        }
-        
-        /* Sleep for the same duration with the measurement.Timestamp resolution in ms */
-        sleep((uint32_t)t_ms);
-    }
-    
-    /* Call the API to get current operation mode of the sensor */
-    bme680_status = bme680_get_power_mode(&operation_mode, &bme680_g);
-    
-    /* When the measurement is completed and data is ready for reading, the sensor must be in BME680_SLEEP_MODE.
-     * Read operation mode to check whether measurement is completely done and wait until the sensor is no more
-     * in BME680_FORCED_MODE. */
-    while (operation_mode == BME680_FORCED_MODE)
-    {
-        /* sleep for 5 ms */
-        sleep(5);
-        bme680_status = bme680_get_power_mode(&operation_mode, &bme680_g);
-    }
+        /* Delay till the measurement is ready. Timestamp resolution in ms */
+        return ((uint32_t)meas_period);
+    } else return 0;
 }
 
 /*!
@@ -270,31 +261,22 @@ static void bme680_bsec_trigger_measurement(bsec_bme_settings_t *sensor_settings
 static void bme680_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inputs, uint8_t *num_bsec_inputs,
     int32_t bsec_process_data)
 {
-    static struct bme680_uncomp_field_data uncomp_data;
-    static struct bme680_comp_field_data comp_data;
-    enum bme680_return_type bme680_status = BME680_COMM_RES_OK;
+    static struct bme680_field_data data;
+    int8_t bme680_status = BME680_OK;
     
     /* We only have to read data if the previous call the bsec_sensor_control() actually asked for it */
     if (bsec_process_data)
     {
-        uint8_t new_data = 0;
-        /* Check new_data bit to see if there is something to process */
-        bme680_status = bme680_get_new_data(&new_data, BME680_FIELD_INDEX0, &bme680_g);
+        bme680_status = bme680_get_sensor_data(&data, &bme680_g);
 
-        if (new_data)
+        if (data.status & BME680_NEW_DATA_MSK)
         {
-            /* Get the uncompensated T+P+H+G data */
-            bme680_status = bme680_get_uncomp_data(&uncomp_data, FIELD_COUNT, BME680_ALL, &bme680_g);
-
-            /* API for compensating T+P+H+G data */
-            bme680_status = bme680_compensate_data(&uncomp_data, &comp_data, FIELD_COUNT, BME680_ALL, &bme680_g);
-
             /* Pressure to be processed by BSEC */
             if (bsec_process_data & BSEC_PROCESS_PRESSURE)
             {
                 /* Place presssure sample into input struct */
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_PRESSURE;
-                inputs[*num_bsec_inputs].signal = comp_data.comp_pressure;
+                inputs[*num_bsec_inputs].signal = data.pressure;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
             }
@@ -303,7 +285,7 @@ static void bme680_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inpu
             {
                 /* Place temperature sample into input struct */
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_TEMPERATURE;
-                inputs[*num_bsec_inputs].signal = comp_data.comp_temperature1;
+                inputs[*num_bsec_inputs].signal = data.temperature / 100.0f;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
                 
@@ -319,7 +301,7 @@ static void bme680_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inpu
             {
                 /* Place humidity sample into input struct */
                 inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_HUMIDITY;
-                inputs[*num_bsec_inputs].signal = comp_data.comp_humidity;
+                inputs[*num_bsec_inputs].signal = data.humidity / 1000.0f;
                 inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                 (*num_bsec_inputs)++;
             }
@@ -327,11 +309,11 @@ static void bme680_bsec_read_data(int64_t time_stamp_trigger, bsec_input_t *inpu
             if (bsec_process_data & BSEC_PROCESS_GAS)
             {
                 /* Check whether gas_valid flag is set */
-                if (uncomp_data.status.gas_valid)
+                if(data.status & BME680_GASM_VALID_MSK)
                 {
                     /* Place sample into input struct */
                     inputs[*num_bsec_inputs].sensor_id = BSEC_INPUT_GASRESISTOR;
-                    inputs[*num_bsec_inputs].signal = comp_data.comp_gas;
+                    inputs[*num_bsec_inputs].signal = data.gas_resistance;
                     inputs[*num_bsec_inputs].time_stamp = time_stamp_trigger;
                     (*num_bsec_inputs)++;
                 }
@@ -358,7 +340,7 @@ static void bme680_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec
 
     bsec_library_return_t bsec_status = BSEC_OK;
     
-    int64_t timestamp;
+    int64_t timestamp = 0;
     float iaq = 0.0f;
     uint8_t iaq_accuracy = 0;
     float temp = 0.0f;
@@ -429,118 +411,72 @@ static void bme680_bsec_process_data(bsec_input_t *bsec_inputs, uint8_t num_bsec
  * @param[in]   sleep               pointer to the system specific sleep function
  * @param[in]   get_timestamp_us    pointer to the system specific timestamp derivation function
  * @param[in]   output_ready        pointer to the function processing obtained BSEC outputs
+ * @param[in]   state_save          pointer to the system-specific state save function
+ * @param[in]   save_intvl          interval at which BSEC state should be saved (in samples)
  *
  * @return      none
  */
-typedef struct sMillis_TypeDef {
-  unsigned long       lastTime;
-  uint8_t             isStart : 1;
-} sMillis_t;
-
-
-int16_t millisTimeOut(sMillis_t* sMillis, uint32_t t)
+int8_t bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready)
 {
-  unsigned long       currentTime = millis();
-  if(sMillis->isStart == 0) {
-    if(t == 0) {
+    /* Timestamp variables */
+    static int64_t time_stamp = 0;
+    static int64_t time_stamp_interval_ms = 0;
+    
+    /* Allocate enough memory for up to BSEC_MAX_PHYSICAL_SENSOR physical inputs*/
+    static bsec_input_t bsec_inputs[BSEC_MAX_PHYSICAL_SENSOR];
+    
+    /* Number of inputs to BSEC */
+    static uint8_t num_bsec_inputs = 0;
+    
+    /* BSEC sensor settings struct */
+    static bsec_bme_settings_t sensor_settings;
+    
+    /* Save state variables */
+    static uint8_t bsec_state[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    static uint8_t work_buffer[BSEC_MAX_PROPERTY_BLOB_SIZE];
+    static uint32_t bsec_state_len = 0;
+    static uint32_t n_samples = 0;
+    
+    static bsec_library_return_t bsec_status = BSEC_OK;
+
+    static uint32_t waitTime = 0;
+    static unsigned long lastTime = 0;
+
+    if(waitTime == 0) {
+      /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
+      time_stamp = get_timestamp_us() * 1000;
+      
+      /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
+      bsec_sensor_control(time_stamp, &sensor_settings);
+      
+      /* Trigger a measurement if necessary */
+      lastTime = millis();
+      waitTime = bme680_bsec_trigger_measurement(&sensor_settings, sleep);
+      return 1;
+    } else if((millis() - lastTime) >= waitTime) {
+      waitTime = 0;
+      /* Call the API to get current operation mode of the sensor */
+      bme680_get_sensor_mode(&bme680_g);
+
+      /* When the measurement is completed and data is ready for reading, the sensor must be in BME680_SLEEP_MODE.
+       * Read operation mode to check whether measurement is completely done and wait until the sensor is no more
+       * in BME680_FORCED_MODE. */
+      while (bme680_g.power_mode == BME680_FORCED_MODE)
+      {
+          /* sleep for 5 ms */
+          sleep(5);
+          bme680_get_sensor_mode(&bme680_g);
+      }
+      
+      /* Read data from last measurement */
+      num_bsec_inputs = 0;
+      bme680_bsec_read_data(time_stamp, bsec_inputs, &num_bsec_inputs, sensor_settings.process_data);
+      
+      /* Time to invoke BSEC to perform the actual processing */
+      bme680_bsec_process_data(bsec_inputs, num_bsec_inputs, output_ready);
       return 0;
     }
-    sMillis->isStart = 1;
-    sMillis->lastTime = currentTime;
-    return -1;
-  } else {
-    if((currentTime - sMillis->lastTime) >= t) {
-      sMillis->isStart = 0;
-      return 0;
-    } else {
-      return -1;
-    }
-  }
-}
-
-
-int32_t bsec_iot_loop(sleep_fct sleep, get_timestamp_us_fct get_timestamp_us, output_ready_fct output_ready, uint32_t t)
-{
-    // /* Timestamp variables */
-    // int64_t time_stamp = 0;
-    // int64_t time_stamp_trigger = 0;
-    // int64_t time_stamp_interval_ms = 0;
-    
-    // /* Allocate enough memory for up to 4 physical inputs thus array size of 4 given in case of bsec_inputs */
-    // bsec_input_t bsec_inputs[5];
-    
-    // /* Number of inputs to BSEC */
-    // uint8_t num_bsec_inputs = 0;
-    
-    // /* BSEC sensor settings struct */
-    // bsec_bme_settings_t sensor_settings;
-    
-    // bsec_library_return_t bsec_status = BSEC_OK;
-
-    // while (1)
-    // {
-        // /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
-        // time_stamp = get_timestamp_us() * 1000;
-        
-        // /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
-        // bsec_status = bsec_sensor_control(time_stamp, &sensor_settings);
-        
-        // /* Trigger a measurement if necessary */
-        // bme680_bsec_trigger_measurement(&sensor_settings, sleep);
-        
-        // /* Read data from last measurement */
-        // num_bsec_inputs = 0;
-        // bme680_bsec_read_data(time_stamp, bsec_inputs, &num_bsec_inputs, sensor_settings.process_data);
-        
-        // /* Time to invoke BSEC to perform the actual processing */
-        // bme680_bsec_process_data(bsec_inputs, num_bsec_inputs, output_ready);
-        
-        // /* Compute how long we can sleep until we need to call bsec_sensor_control() next */
-        // /* Time_stamp is converted from microseconds to nanoseconds first and then the difference to milliseconds */
-        // time_stamp_interval_ms = (sensor_settings.next_call - get_timestamp_us() * 1000) / 1000000;
-        // if (time_stamp_interval_ms > 0)
-        // {
-            // sleep((uint32_t)time_stamp_interval_ms);
-        // }
-    // }
-    
-  /* Timestamp variables */
-  static int64_t time_stamp = 0;
-  static int64_t time_stamp_trigger = 0;
-  static int64_t time_stamp_interval_ms = 0;
-  
-  /* Allocate enough memory for up to 4 physical inputs thus array size of 4 given in case of bsec_inputs */
-  static bsec_input_t bsec_inputs[5];
-  
-  /* Number of inputs to BSEC */
-  static uint8_t num_bsec_inputs = 0;
-  
-  /* BSEC sensor settings struct */
-  static bsec_bme_settings_t sensor_settings;
-  
-  static bsec_library_return_t bsec_status = BSEC_OK;
-  
-  static sMillis_t sMillis;
-  unsigned long millisTime = millis();
-  if(millisTimeOut(&sMillis, t) == 0) {
-    /* get the timestamp in nanoseconds before calling bsec_sensor_control() */
-    time_stamp = get_timestamp_us() * 1000;
-    
-    /* Retrieve sensor settings to be used in this time instant by calling bsec_sensor_control */
-    bsec_status = bsec_sensor_control(time_stamp, &sensor_settings);
-    
-    /* Trigger a measurement if necessary */
-    bme680_bsec_trigger_measurement(&sensor_settings, sleep);
-    
-    /* Read data from last measurement */
-    num_bsec_inputs = 0;
-    bme680_bsec_read_data(time_stamp, bsec_inputs, &num_bsec_inputs, sensor_settings.process_data);
-    
-    /* Time to invoke BSEC to perform the actual processing */
-    bme680_bsec_process_data(bsec_inputs, num_bsec_inputs, output_ready);
-    return (millis() - millisTime);
-  }
-  return -1;
+    return 1;
 }
 
 /*! @}*/
