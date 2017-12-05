@@ -62,6 +62,8 @@ void loop()
       Serial.print("calibrated altitude(m) :");
       Serial.println(bme.reaCalibratedAltitude(seaLevel));
 #endif
+      Serial.print("gas resistance :");
+      Serial.println(bme.readGasResistance());
       Serial.print("IAQ :");
       float iaq = bme.readIAQ();
       Serial.print(iaq);

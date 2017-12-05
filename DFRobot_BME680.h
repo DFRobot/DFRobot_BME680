@@ -71,6 +71,9 @@ typedef void (*pfUpdate_t)(void);
 
 #define supportIAQ()        setConvertAndUpdate();
 
+void bme680_delay_ms(uint32_t period);
+int64_t bme680_getus(void);
+
 void bme680_outputReady(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,
                         float pressure, float raw_temperature, float raw_humidity, float gas, bsec_library_return_t bsec_status);
 
@@ -83,6 +86,7 @@ class DFRobot_BME680
 
     int16_t       begin(void);
     void          update(void);
+    int8_t        iaqUpdate(void);
     void          startConvert(void);
     float         readTemperature(void);
     float         readPressure(void);
@@ -92,10 +96,6 @@ class DFRobot_BME680
     float         readGasResistance(void);
     float         readSeaLevel(float altitude);
     float         readIAQ(void);
-
-  protected:
-    pfStartConvert_t        pfStartConvert;
-    pfUpdate_t              pfUpdate;
 };
 
 #endif

@@ -31,18 +31,6 @@ static int8_t bme680_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, 
 }
 
 
-static void bme680_delay_ms(uint32_t period)
-{
-  delay(period);
-}
-
-
-inline static int64_t bme680_getus(void)
-{
-  return (millis() * 1000);
-}
-
-
 DFRobot_BME680_SPI::DFRobot_BME680_SPI(uint8_t pin_cs) :
                     DFRobot_BME680(bme680_spi_read, bme680_spi_write, bme680_delay_ms, eBME680_INTERFACE_SPI)
 {
@@ -56,11 +44,4 @@ void DFRobot_BME680_SPI::setConvertAndUpdate()
 {
   bsec_iot_init(0.33333f, 0, bme680_spi_write, bme680_spi_read, bme680_delay_ms, 0x77, BME680_SPI_INTF);
 }
-
-
-int8_t DFRobot_BME680_SPI::iaqUpdate(void)
-{
-  return bsec_iot_loop(bme680_delay_ms, bme680_getus, bme680_outputReady);
-}
-
 

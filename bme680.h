@@ -218,6 +218,8 @@ int8_t bme680_set_sensor_settings(uint16_t desired_settings, struct bme680_dev *
  * @retval zero -> Success / +ve value -> Warning / -ve value -> Error.
  */
 int8_t bme680_get_sensor_settings(uint16_t desired_settings, struct bme680_dev *dev);
+
+uint32_t calc_gas_resistance(uint16_t gas_res_adc, uint8_t gas_range, struct bme680_dev *dev);
 #ifdef __cplusplus
 }
 #endif /* End of CPP guard */

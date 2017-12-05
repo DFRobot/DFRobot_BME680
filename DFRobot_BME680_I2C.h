@@ -10,7 +10,6 @@ class DFRobot_BME680_I2C : public DFRobot_BME680
     DFRobot_BME680_I2C(uint8_t I2CAddr);
 
     void        setConvertAndUpdate(void);
-    int8_t      iaqUpdate(void);
 };
 
 #endif

@@ -9,7 +9,6 @@ class DFRobot_BME680_SPI : public DFRobot_BME680
     DFRobot_BME680_SPI(uint8_t pin_cs);
 
     void        setConvertAndUpdate(void);
-    int8_t      iaqUpdate(void);
 };
 
 #endif

@@ -138,17 +138,6 @@ static uint32_t calc_pressure(uint32_t pres_adc, const struct bme680_dev *dev);
 static uint32_t calc_humidity(uint16_t hum_adc, const struct bme680_dev *dev);
 
 /*!
- * @brief This internal API is used to calculate the Gas Resistance value.
- *
- * @param[in] dev		:Structure instance of bme680_dev.
- * @param[in] gas_res_adc	:Contains the Gas Resistance ADC value.
- * @param[in] gas_range		:Contains the range of gas values.
- *
- * @return uint32_t calculated gas resistance.
- */
-static uint32_t calc_gas_resistance(uint16_t gas_res_adc, uint8_t gas_range, const struct bme680_dev *dev);
-
-/*!
  * @brief This internal API is used to calculate the Heat Resistance value.
  *
  * @param[in] dev	:Structure instance of bme680_dev.
@@ -908,7 +897,7 @@ static uint32_t calc_humidity(uint16_t hum_adc, const struct bme680_dev *dev)
 /*!
  * @brief This internal API is used to calculate the Gas Resistance value.
  */
-static uint32_t calc_gas_resistance(uint16_t gas_res_adc, uint8_t gas_range, const struct bme680_dev *dev)
+uint32_t calc_gas_resistance(uint16_t gas_res_adc, uint8_t gas_range, struct bme680_dev *dev)
 {
 	int64_t var1;
 	uint64_t var2;

@@ -16,6 +16,7 @@ DFRobot_BME680_I2C	KEYWORD1
 begin	KEYWORD2
 startConvert	KEYWORD2
 update	KEYWORD2
+iaqUpdate	KEYWORD2
 readTempture	KEYWORD2
 readHumidity	KEYWORD2
 readPressure	KEYWORD2

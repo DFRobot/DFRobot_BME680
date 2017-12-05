@@ -1,5 +1,7 @@
 # BME680
-BME680 is an integrated environmental sensor developed specifically for mobile applications and wearables where size and low power consumption are key requirements. Expanding Bosch Sensortec’s existing family of environmental sensors, the BME680 integrates for the first time individual high linearity and high accuracy sensors for gas, pressure, humidity and temperature.
+BME680 is an integrated environmental sensor developed specifically for mobile applications and wearables 
+where size and low power consumption are key requirements. Expanding Bosch Sensortec’s existing family of environmental sensors, 
+the BME680 integrates for the first time individual high linearity and high accuracy sensors for gas, pressure, humidity and temperature.
 
 ![SVG1](https://raw.githubusercontent.com/DFRobot/binaryfiles/master/SEN0248/SEN0248svg1.png)
 
@@ -21,7 +23,10 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 
 ## Summary
 
-Reads temperature, humidity, gas, pressure and calculates altitude.
+Reads temperature, humidity, gas, IAQ(details in examples\readme), pressure and calculates altitude.
+
+###I2C and 4 wires SPI interface
+
 
 ## Installation
 
