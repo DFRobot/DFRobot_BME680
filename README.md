@@ -25,9 +25,6 @@ Provides an Arduino library for reading and interpreting Bosch BME680 data over 
 
 Reads temperature, humidity, gas, IAQ(details in examples\readme), pressure and calculates altitude.
 
-###I2C and 4 wires SPI interface
-
-
 ## Installation
 
 To use this library download the zip file, uncompress it to a folder named DFRobot_BME680. 
