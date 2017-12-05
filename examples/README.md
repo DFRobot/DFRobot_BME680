@@ -1,4 +1,4 @@
-#attention:
+# Attention:
 
 IAQ process is for experienced people.
 Wait about 5 minutes to get correct IAQ data.
@@ -15,9 +15,9 @@ How to get IAQ?
 
 Processing.(Reference in docs_for_iaq\BST-BME680-AN008-45.pdf chapter 2.4, page 15)
 
-##Platform
+## Platform
 
-###esp8266
+### esp8266
 
 1.We need to copy the file docs_for_iaq\esp8266\libalgobsec.a and paste the file into the hardware\esp8266\2.3.0\tools\sdk\lib folder.
 
