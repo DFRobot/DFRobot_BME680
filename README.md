@@ -61,6 +61,15 @@ void startConvert(void);
 void update(void);
 
 /*
+ * @brief update all data to MCU ram with IAQ (only for esp8266 now)
+ *
+ * @return result:
+ *         0 :complete
+ *         1 :busy
+ */
+int8_t iaqUpdate(void);
+
+/*
  * @brief read the temperature value (unit ℃)
  *
  * @return temperature value, this value has two decimal points
