@@ -61,7 +61,7 @@ void loop()
       Serial.println(bme.readAltitude());
 #ifdef CALIBRATE_PRESSURE
       Serial.print("calibrated altitude(m) :");
-      Serial.println(bme.reaCalibratedAltitude(seaLevel));
+      Serial.println(bme.readCalibratedAltitude(seaLevel));
 #endif
       Serial.print("gas resistance :");
       Serial.println(bme.readGasResistance());

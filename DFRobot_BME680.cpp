@@ -142,7 +142,7 @@ float DFRobot_BME680::readAltitude(void)
 }
 
 
-float DFRobot_BME680::reaCalibratedAltitude(float seaLevel)
+float DFRobot_BME680::readCalibratedAltitude(float seaLevel)
 {
     //data->altitude = 44330.0 * (1.0 - pow((float) data->pressure / 100.0f / BME680_SEALEVEL, 0.1903));
    return (1.0 - pow((float) bme680_data.pressure / seaLevel, 0.190284)) * 287.15 / 0.0065;
