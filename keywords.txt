@@ -17,6 +17,8 @@ begin	KEYWORD2
 startConvert	KEYWORD2
 update	KEYWORD2
 iaqUpdate	KEYWORD2
+setParam	KEYWORD2
+setGasHeater	KEYWORD2
 readTempture	KEYWORD2
 readHumidity	KEYWORD2
 readPressure	KEYWORD2

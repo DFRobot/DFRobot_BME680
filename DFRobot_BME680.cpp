@@ -168,3 +168,41 @@ float DFRobot_BME680::readIAQ(void)
   //}
   return 0;
 }
+
+
+void DFRobot_BME680::setParam(eBME680_param_t eParam, uint8_t dat)
+{
+  if(dat > 0x05) return;
+  switch(eParam) {
+    case eBME680_PARAM_TEMPSAMP: writeParamHelper(0x74, dat, 0x07 << 5); break;
+    case eBME680_PARAM_PREESAMP: writeParamHelper(0x74, dat, 0x07 << 2); break;
+    case eBME680_PARAM_HUMISAMP: writeParamHelper(0x72, dat, 0x07); break;
+    case eBME680_PARAM_IIRSIZE: writeParamHelper(0x75, dat, 0x07 << 2); break;
+  }
+}
+
+
+void DFRobot_BME680::setGasHeater(uint16_t temp, uint16_t t)
+{
+  bme680_sensor.gas_sett.heatr_temp = 320; /* degree Celsius */
+  bme680_sensor.gas_sett.heatr_dur = 150; /* milliseconds */
+  uint8_t set_required_settings = BME680_GAS_SENSOR_SEL;
+  bme680_set_sensor_settings(set_required_settings, &bme680_sensor);
+}
+
+
+void DFRobot_BME680::writeParamHelper(uint8_t reg, uint8_t dat, uint8_t addr)
+{
+  uint8_t       var1 = 0;
+  uint8_t       addrCount = 0;
+  if(bme680_sensor.intf == BME680_SPI_INTF) bme680_sensor.write(bme680_sensor.dev_id, 0x73, 0x00, 1);
+  bme680_sensor.read(bme680_sensor.dev_id, reg, &var1, 1);
+  var1 &= ~addr;
+  while(!(addr & 0x01)) {
+    addrCount ++;
+    addr >>= 1;
+  }
+  var1 |= dat << addrCount;
+  bme680_sensor.write(bme680_sensor.dev_id, reg, &var1, 1);
+}
+

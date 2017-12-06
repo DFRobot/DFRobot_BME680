@@ -122,6 +122,36 @@ float readSeaLevel(float altitude);
  */
 float readCalibratedAltitude(float seaLevelPressure);
 
+#define BME680_OS_NONE		UINT8_C(0)
+#define BME680_OS_1X		UINT8_C(1)
+#define BME680_OS_2X		UINT8_C(2)
+#define BME680_OS_4X		UINT8_C(3)
+#define BME680_OS_8X		UINT8_C(4)
+#define BME680_OS_16X		UINT8_C(5)
+
+typedef enum {
+  eBME680_PARAM_TEMPSAMP,
+  eBME680_PARAM_HUMISAMP,
+  eBME680_PARAM_PREESAMP,
+  eBME680_PARAM_IIRSIZE
+} eBME680_param_t;
+
+/*
+ * @brief set bme680 parament
+ *
+ * @param eParam        :which param you want to change
+ *        dat           :object data, can't more than 5
+ */
+void setParam(eBME680_param_t eParam, uint8_t dat);
+
+/*
+ * @brief set bme680 gas heater
+ *
+ * @param temp        :your object temp
+ *        t           :time spend in milliseconds
+ */
+void setGasHeater(uint16_t temp, uint16_t t);
+
 ```
 
 ## Compatibility

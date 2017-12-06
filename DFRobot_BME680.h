@@ -77,6 +77,13 @@ int64_t bme680_getus(void);
 void bme680_outputReady(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature, float humidity,
                         float pressure, float raw_temperature, float raw_humidity, float gas, bsec_library_return_t bsec_status);
 
+typedef enum {
+  eBME680_PARAM_TEMPSAMP,
+  eBME680_PARAM_HUMISAMP,
+  eBME680_PARAM_PREESAMP,
+  eBME680_PARAM_IIRSIZE
+} eBME680_param_t;
+                        
 class DFRobot_BME680
 {
   public:
@@ -96,6 +103,12 @@ class DFRobot_BME680
     float         readGasResistance(void);
     float         readSeaLevel(float altitude);
     float         readIAQ(void);
+    
+    void          setParam(eBME680_param_t eParam, uint8_t dat);
+    void          setGasHeater(uint16_t temp, uint16_t t);
+  
+  private:
+    void          writeParamHelper(uint8_t reg, uint8_t dat, uint8_t addr);
 };
 
 #endif
