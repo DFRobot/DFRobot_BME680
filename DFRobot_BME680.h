@@ -106,6 +106,7 @@ class DFRobot_BME680
     
     void          setParam(eBME680_param_t eParam, uint8_t dat);
     void          setGasHeater(uint16_t temp, uint16_t t);
+    uint8_t       isIAQReady(void);
   
   private:
     void          writeParamHelper(uint8_t reg, uint8_t dat, uint8_t addr);

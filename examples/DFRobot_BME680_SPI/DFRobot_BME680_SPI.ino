@@ -1,3 +1,20 @@
+/*
+ * file DFRobot_BME680_I2C.ino
+ *
+ * @ https://github.com/DFRobot/DFRobot_BME680
+ *
+ * Connect bme680 4 wires SPI interface with your board (please reference board compatibility).
+ * BME680 cs pin connect to D3 on esp8266 and esp32 board, on AVR board is IO 3.
+ *
+ * Temprature, Humidity, pressure, altitude, calibrate altitude and gas resistance data will print on serial window.
+ *
+ * Copyright   [DFRobot](http://www.dfrobot.com), 2016
+ * Copyright   GNU Lesser General Public License
+ *
+ * version  V1.0
+ * date  2017-12-7
+ */
+
 #include "DFRobot_BME680_SPI.h"
 #include "SPI.h"
 

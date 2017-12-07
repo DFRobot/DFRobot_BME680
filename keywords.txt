@@ -16,7 +16,9 @@ DFRobot_BME680_I2C	KEYWORD1
 begin	KEYWORD2
 startConvert	KEYWORD2
 update	KEYWORD2
+supportIAQ	KEYWORD2
 iaqUpdate	KEYWORD2
+isIAQReady	KEYWORD2
 setParam	KEYWORD2
 setGasHeater	KEYWORD2
 readTempture	KEYWORD2

@@ -1,8 +1,9 @@
 #include "DFRobot_BME680.h"
 
-struct        bme680_dev bme680_sensor;
-struct        bme680_field_data bme680_data;
-uint8_t       convertCmd = (0x05 << 5) | (0x05 << 2) | (0x01);
+static struct        bme680_dev bme680_sensor;
+static struct        bme680_field_data bme680_data;
+static uint8_t       convertCmd = (0x05 << 5) | (0x05 << 2) | (0x01);
+static uint8_t       iaqReady_ = 0;
 
 void bme680_outputReady(int64_t timestamp, float iaq, uint8_t iaq_accuracy, float temperature,
                         float humidity, float pressure, float raw_temperature, float raw_humidity,
@@ -12,6 +13,7 @@ void bme680_outputReady(int64_t timestamp, float iaq, uint8_t iaq_accuracy, floa
   bme680_data.temperature = temperature;
   bme680_data.humidity = humidity;
   bme680_data.pressure = pressure;
+  if(iaq_accuracy != 0) iaqReady_ = 1;
 }
 
 
@@ -163,10 +165,7 @@ float DFRobot_BME680::readSeaLevel(float altitude)
 
 float DFRobot_BME680::readIAQ(void)
 {
-  //if(pfStartConvert != startConvert_) {
-    return bme680_data.gas_index;
-  //}
-  return 0;
+  return bme680_data.gas_index;
 }
 
 
@@ -188,6 +187,12 @@ void DFRobot_BME680::setGasHeater(uint16_t temp, uint16_t t)
   bme680_sensor.gas_sett.heatr_dur = 150; /* milliseconds */
   uint8_t set_required_settings = BME680_GAS_SENSOR_SEL;
   bme680_set_sensor_settings(set_required_settings, &bme680_sensor);
+}
+
+
+uint8_t DFRobot_BME680::isIAQReady(void)
+{
+  return iaqReady_;
 }
 
 

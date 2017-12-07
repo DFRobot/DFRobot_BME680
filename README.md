@@ -65,6 +65,15 @@ void update(void);
 int8_t iaqUpdate(void);
 
 /*
+ * @brief check IAQ ready
+ *
+ * @return result:
+ *         0 :ready
+ *         1 :not ready
+ */
+uint8_t isIAQRead(void);
+
+/*
  * @brief read the temperature value (unit ℃)
  *
  * @return temperature value, this value has two decimal points

@@ -1,3 +1,19 @@
+/*
+ * file DFRobot_BME680_I2C.ino
+ *
+ * @ https://github.com/DFRobot/DFRobot_BME680
+ *
+ * connect bme680 I2C interface with your board (please reference board compatibility)
+ *
+ * Temprature, Humidity, pressure, altitude, calibrate altitude, gas resistance and IAQ data will print on serial window.
+ *
+ * Copyright   [DFRobot](http://www.dfrobot.com), 2016
+ * Copyright   GNU Lesser General Public License
+ *
+ * version  V1.0
+ * date  2017-12-7
+ */
+ 
 #include "DFRobot_BME680_I2C.h"
 #include "Wire.h"
 
@@ -28,9 +44,10 @@ void setup()
 
 void loop()
 {
-  static uint8_t       firstCalivrate = 0;
+  static uint8_t       firstCalibrate = 0;
+  
   #ifdef CALIBRATE_PRESSURE
-  if(firstCalivrate == 0) {
+  if(firstCalibrate == 0) {
     if(bme.iaqUpdate() == 0) {
       /*You can use an accurate altitude to calibrate sea level air pressure. 
        *And then use this calibrated sea level pressure as a reference to obtain the calibrated altitude.
@@ -39,13 +56,14 @@ void loop()
       seaLevel = bme.readSeaLevel(525.0);
       Serial.print("seaLevel :");
       Serial.println(seaLevel);
-      firstCalivrate = 1;
+      firstCalibrate = 1;
     }
   }
   #else
-    firstCalivrate = 1;
+    firstCalibrate = 1;
   #endif
-  if(firstCalivrate) {
+  
+  if(firstCalibrate) {
     uint8_t rslt = bme.iaqUpdate();
     if(rslt == 0) {
       Serial.println();
@@ -65,15 +83,17 @@ void loop()
 #endif
       Serial.print("gas resistance :");
       Serial.println(bme.readGasResistance());
-      Serial.print("IAQ :");
-      float iaq = bme.readIAQ();
-      Serial.print(iaq);
-      if(iaq < 50) Serial.println(" good");
-      else if(iaq < 100) Serial.println(" average");
-      else if(iaq < 150) Serial.println(" little bad");
-      else if(iaq < 200) Serial.println(" bad");
-      else if(iaq < 300) Serial.println(" worse");
-      else Serial.println(" very bad");
+      if(bme.isIAQReady()) {
+        Serial.print("IAQ :");
+        float iaq = bme.readIAQ();
+        Serial.print(iaq);
+        if(iaq < 50) Serial.println(" good");
+        else if(iaq < 100) Serial.println(" average");
+        else if(iaq < 150) Serial.println(" little bad");
+        else if(iaq < 200) Serial.println(" bad");
+        else if(iaq < 300) Serial.println(" worse");
+        else Serial.println(" very bad");
+      } else Serial.println("IAQ not ready, please wait about 5 minutes");
     }
   }
 }
