@@ -33,7 +33,7 @@ void setup()
   while(rslt != 0) {
     rslt = bme.begin();
     if(rslt != 0) {
-      Serial.println("bme begin faild");
+      Serial.println("bme begin failure");
       delay(2000);
     }
   }

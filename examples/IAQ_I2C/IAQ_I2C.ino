@@ -5,7 +5,7 @@
  *
  * connect bme680 I2C interface with your board (please reference board compatibility)
  *
- * Temprature, Humidity, pressure, altitude, calibrate altitude, gas resistance and IAQ data will print on serial window.
+ * Temprature, Humidity, pressure, altitude, calibrated altitude, gas resistance and IAQ data will be printed via serial.
  *
  * Copyright   [DFRobot](http://www.dfrobot.com), 2016
  * Copyright   GNU Lesser General Public License
@@ -34,7 +34,7 @@ void setup()
   while(rslt != 0) {
     rslt = bme.begin();
     if(rslt != 0) {
-      Serial.println("bme begin faild");
+      Serial.println("bme begin failure");
       delay(2000);
     }
   }
@@ -44,10 +44,10 @@ void setup()
 
 void loop()
 {
-  static uint8_t       firstCalibrate = 0;
+  static uint8_t       calibrated = 0;
   
   #ifdef CALIBRATE_PRESSURE
-  if(firstCalibrate == 0) {
+  if(calibrated == 0) {
     if(bme.iaqUpdate() == 0) {
       /*You can use an accurate altitude to calibrate sea level air pressure. 
        *And then use this calibrated sea level pressure as a reference to obtain the calibrated altitude.
@@ -56,18 +56,18 @@ void loop()
       seaLevel = bme.readSeaLevel(525.0);
       Serial.print("seaLevel :");
       Serial.println(seaLevel);
-      firstCalibrate = 1;
+      calibrated = 1;
     }
   }
   #else
-    firstCalibrate = 1;
+    calibrated = 1;
   #endif
   
-  if(firstCalibrate) {
+  if(calibrated) {
     uint8_t rslt = bme.iaqUpdate();
     if(rslt == 0) {
       Serial.println();
-      Serial.print("time(ms) :");
+      Serial.print("timestamp(ms) :");
       Serial.println(millis());
       Serial.print("temperature(C) :");
       Serial.println(bme.readTemperature(), 2);
@@ -93,7 +93,11 @@ void loop()
         else if(iaq < 200) Serial.println(" bad");
         else if(iaq < 300) Serial.println(" worse");
         else Serial.println(" very bad");
-      } else Serial.println("IAQ not ready, please wait about 5 minutes");
+      } else {
+        Serial.print("IAQ not ready, please wait about ");
+        Serial.print((int)(305000-millis())/1000);
+        Serial.println(" seconds");
+      }
     }
   }
 }
