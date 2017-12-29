@@ -71,7 +71,7 @@ int8_t iaqUpdate(void);
  *         0 :ready
  *         1 :not ready
  */
-uint8_t isIAQRead(void);
+uint8_t isIAQReady(void);
 
 /*
  * @brief read the temperature value (unit ℃)
