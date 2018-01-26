@@ -6,6 +6,7 @@ static uint8_t bme680_cs = 0;
 static int8_t bme680_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   SPI.begin();
+  SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
   digitalWrite(bme680_cs, 0);
   SPI.transfer(reg_addr | 0x80);
   while(len --) {
@@ -13,6 +14,7 @@ static int8_t bme680_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, u
     data ++;
   }
   digitalWrite(bme680_cs, 1);
+  SPI.endTransaction();
   return 0;
 }
 
@@ -20,6 +22,7 @@ static int8_t bme680_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, u
 static int8_t bme680_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 {
   SPI.begin();
+  SPI.beginTransaction(SPISettings(1000000, MSBFIRST, SPI_MODE0));
   digitalWrite(bme680_cs, 0);
   SPI.transfer(reg_addr);
   while(len --) {
@@ -27,6 +30,7 @@ static int8_t bme680_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, 
     data ++;
   }
   digitalWrite(bme680_cs, 1);
+  SPI.endTransaction();
   return 0;
 }
 
