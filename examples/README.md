@@ -7,7 +7,7 @@ IAQ example compatibility
 
 platform                | Work Well | Work Wrong | Untested  | Remarks
 ------------------ | :----------: | :----------: | :---------: | -----
-ESP8266  |      √       |             |            | SDK -V 2.2.0
+ESP8266  |      √       |             |            | SDK -V 2.2.0 -V 2.3.0
 
 Others can't work now.
 
