@@ -13,7 +13,6 @@ Provide a Raspberry Pi library for the BME680 modules.
 * [Feature](#feature)
 * [Installation](#installation)
 * [Methods](#methods)
-* [Compatibility](#compatibility)
 * [Credits](#credits)
 <snippet>
 <content>
