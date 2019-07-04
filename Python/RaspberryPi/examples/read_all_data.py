@@ -10,11 +10,12 @@ Copyright   GNU Lesser General Public License
 version  V1.0
 date  2019-7-2
 '''
-
-from DFRobot_BME680 import BME680
+import sys
+sys.path.append('../')
+from DFRobot_BME680 import DFRobot_BME680
 import time
 
-sensor = BME680()
+sensor = DFRobot_BME680()
 
 # These calibration data can safely be commented
 # out, if desired.
@@ -32,11 +33,11 @@ for name in dir(sensor.calibration_data):
 # change the balance between accuracy and noise in
 # the data.
 
-sensor.set_humidity_oversample(sensor.OS_2X)
-sensor.set_pressure_oversample(sensor.OS_4X)
-sensor.set_temperature_oversample(sensor.OS_8X)
-sensor.set_filter(sensor.FILTER_SIZE_3)
-sensor.set_gas_status(sensor.ENABLE_GAS_MEAS)
+sensor.set_humidity_oversample(sensor.OS_2X) #Oversampling value: OS_NONE, OS_1X, OS_2X, OS_4X, OS_8X, OS_16X
+sensor.set_pressure_oversample(sensor.OS_4X) #Oversampling value: OS_NONE, OS_1X, OS_2X, OS_4X, OS_8X, OS_16X
+sensor.set_temperature_oversample(sensor.OS_8X) #Oversampling value: OS_NONE, OS_1X, OS_2X, OS_4X, OS_8X, OS_16X
+sensor.set_filter(sensor.FILTER_SIZE_3) #increasing resolution but reducing bandwidth
+sensor.set_gas_status(sensor.ENABLE_GAS_MEAS) #1 for enable and 0 for disable
 '''
 print("\n\nInitial reading:")
 for name in dir(sensor.data):
@@ -45,9 +46,9 @@ for name in dir(sensor.data):
     if not name.startswith('_'):
         print("{}: {}".format(name, value))
 '''
-sensor.set_gas_heater_temperature(320)
-sensor.set_gas_heater_duration(150)
-sensor.select_gas_heater_profile(0)
+sensor.set_gas_heater_temperature(320) #value:target temperature in degrees celsius, between 200 ~ 400
+sensor.set_gas_heater_duration(150) #value:target duration in milliseconds, between 1 and 4032
+sensor.select_gas_heater_profile(0) #value:current gas sensor conversion profile: 0 to 9
 
 
 print("\n\nPolling:")

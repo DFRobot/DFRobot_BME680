@@ -1,196 +1,213 @@
+'''
+ MIT License
+ Copyright (C) <2019> <@DFRobot Frank>
+　Permission is hereby granted, free of charge, to any person obtaining a copy of this
+　software and associated documentation files (the "Software"), to deal in the Software
+　without restriction, including without limitation the rights to use, copy, modify,
+　merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+　permit persons to whom the Software is furnished to do so.
+　The above copyright notice and this permission notice shall be included in all copies or
+　substantial portions of the Software.
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+'''
+
 import time
 import smbus
 import math
 
 # BME680 I2C addresses
-I2C_ADDR_PRIMARY = 0x76
-I2C_ADDR_SECONDARY = 0x77
+_BME680_I2C_ADDR_PRIMARY = 0x76
+_BME680_I2C_ADDR_SECONDARY = 0x77
 
 # BME680 unique chip identifier
-CHIP_ID = 0x61
+_BME680_CHIP_ID = 0x61
 
 # BME680 coefficients related defines
-COEFF_SIZE = 41
-COEFF_ADDR1_LEN = 25
-COEFF_ADDR2_LEN = 16
+_BME680_COEFF_SIZE = 41
+_BME680_COEFF_ADDR1_LEN = 25
+_BME680_COEFF_ADDR2_LEN = 16
 
 # BME680 field_x related defines
-FIELD_LENGTH = 15
-FIELD_ADDR_OFFSET = 17
+_BME680_FIELD_LENGTH = 15
+_BME680_FIELD_ADDR_OFFSET = 17
 
 # BME680 coefficients related defines
-COEFF_SIZE = 41
-COEFF_ADDR1_LENCOEFF_ADDR1_LEN = 25
-COEFF_ADDR2_LENCOEFF_ADDR2_LEN = 16
+_BME680_COEFF_SIZE = 41
+_BME680_COEFF_ADDR1_LENCOEFF_ADDR1_LEN = 25
+_BME680_COEFF_ADDR2_LENCOEFF_ADDR2_LEN = 16
 
 # BME680 field_x related defines
-FIELD_LENGTHFIELD_LENGTH = 15
-FIELD_ADDR_OFFSETFIELD_ADDR_OFFSET = 17
+_BME680_FIELD_LENGTHFIELD_LENGTH = 15
+_BME680_FIELD_ADDR_OFFSETFIELD_ADDR_OFFSET = 17
 
 # Soft reset command
-SOFT_RESET_CMD = 0xb6
+_BME680_SOFT_RESET_CMD = 0xb6
 
 # Error code definitions
-OK = 0
+_BME680_OK = 0
 # Errors
-E_NULL_PTR = -1
-E_COM_FAIL = -2
-E_DEV_NOT_FOUND = -3
-E_INVALID_LENGTH = -4
+_BME680_E_NULL_PTR = -1
+_BME680_E_COM_FAIL = -2
+_BME680_E_DEV_NOT_FOUND = -3
+_BME680_E_INVALID_LENGTH = -4
 
 # Warnings
-W_DEFINE_PWR_MODE = 1
-W_NO_NEW_DATA = 2
+_BME680_W_DEFINE_PWR_MODE = 1
+_BME680_W_NO_NEW_DATA = 2
 
 # Info's
-I_MIN_CORRECTION = 1
-I_MAX_CORRECTION = 2
+_BME680_I_MIN_CORRECTION = 1
+_BME680_I_MAX_CORRECTION = 2
 
 # Register map
 # Other coefficient's address
-ADDR_RES_HEAT_VAL_ADDR = 0x00
-ADDR_RES_HEAT_RANGE_ADDR = 0x02
-ADDR_RANGE_SW_ERR_ADDR = 0x04
-ADDR_SENS_CONF_START = 0x5A
-ADDR_GAS_CONF_START = 0x64
+_BME680_ADDR_RES_HEAT_VAL_ADDR = 0x00
+_BME680_ADDR_RES_HEAT_RANGE_ADDR = 0x02
+_BME680_ADDR_RANGE_SW_ERR_ADDR = 0x04
+_BME680_ADDR_SENS_CONF_START = 0x5A
+_BME680_ADDR_GAS_CONF_START = 0x64
 
 # Field settings
-FIELD0_ADDR = 0x1d
+_BME680_FIELD0_ADDR = 0x1d
 
 # Heater settings
-RES_HEAT0_ADDR = 0x5a
-GAS_WAIT0_ADDR = 0x64
+_BME680_RES_HEAT0_ADDR = 0x5a
+_BME680_GAS_WAIT0_ADDR = 0x64
 
 # Sensor configuration registers
-CONF_HEAT_CTRL_ADDR = 0x70
-CONF_ODR_RUN_GAS_NBC_ADDR = 0x71
-CONF_OS_H_ADDR = 0x72
-MEM_PAGE_ADDR = 0xf3
-CONF_T_P_MODE_ADDR = 0x74
-CONF_ODR_FILT_ADDR = 0x75
+_BME680_CONF_HEAT_CTRL_ADDR = 0x70
+_BME680_CONF_ODR_RUN_GAS_NBC_ADDR = 0x71
+_BME680_CONF_OS_H_ADDR = 0x72
+_BME680_MEM_PAGE_ADDR = 0xf3
+_BME680_CONF_T_P_MODE_ADDR = 0x74
+_BME680_CONF_ODR_FILT_ADDR = 0x75
 
 # Coefficient's address
-COEFF_ADDR1 = 0x89
-COEFF_ADDR2 = 0xe1
+_BME680_COEFF_ADDR1 = 0x89
+_BME680_COEFF_ADDR2 = 0xe1
 
 # Chip identifier
-CHIP_ID_ADDR = 0xd0
+_BME680_CHIP_ID_ADDR = 0xd0
 
 # Soft reset register
-SOFT_RESET_ADDR = 0xe0
+_BME680_SOFT_RESET_ADDR = 0xe0
 
 # Array Index to Field data mapping for Calibration Data
-T2_LSB_REG = 1
-T2_MSB_REG = 2
-T3_REG = 3
-P1_LSB_REG = 5
-P1_MSB_REG = 6
-P2_LSB_REG = 7
-P2_MSB_REG = 8
-P3_REG = 9
-P4_LSB_REG = 11
-P4_MSB_REG = 12
-P5_LSB_REG = 13
-P5_MSB_REG = 14
-P7_REG = 15
-P6_REG = 16
-P8_LSB_REG = 19
-P8_MSB_REG = 20
-P9_LSB_REG = 21
-P9_MSB_REG = 22
-P10_REG = 23
-H2_MSB_REG = 25
-H2_LSB_REG = 26
-H1_LSB_REG = 26
-H1_MSB_REG = 27
-H3_REG = 28
-H4_REG = 29
-H5_REG = 30
-H6_REG = 31
-H7_REG = 32
-T1_LSB_REG = 33
-T1_MSB_REG = 34
-GH2_LSB_REG = 35
-GH2_MSB_REG = 36
-GH1_REG = 37
-GH3_REG = 38
+_BME680_T2_LSB_REG = 1
+_BME680_T2_MSB_REG = 2
+_BME680_T3_REG = 3
+_BME680_P1_LSB_REG = 5
+_BME680_P1_MSB_REG = 6
+_BME680_P2_LSB_REG = 7
+_BME680_P2_MSB_REG = 8
+_BME680_P3_REG = 9
+_BME680_P4_LSB_REG = 11
+_BME680_P4_MSB_REG = 12
+_BME680_P5_LSB_REG = 13
+_BME680_P5_MSB_REG = 14
+_BME680_P7_REG = 15
+_BME680_P6_REG = 16
+_BME680_P8_LSB_REG = 19
+_BME680_P8_MSB_REG = 20
+_BME680_P9_LSB_REG = 21
+_BME680_P9_MSB_REG = 22
+_BME680_P10_REG = 23
+_BME680_H2_MSB_REG = 25
+_BME680_H2_LSB_REG = 26
+_BME680_H1_LSB_REG = 26
+_BME680_H1_MSB_REG = 27
+_BME680_H3_REG = 28
+_BME680_H4_REG = 29
+_BME680_H5_REG = 30
+_BME680_H6_REG = 31
+_BME680_H7_REG = 32
+_BME680_T1_LSB_REG = 33
+_BME680_T1_MSB_REG = 34
+_BME680_GH2_LSB_REG = 35
+_BME680_GH2_MSB_REG = 36
+_BME680_GH1_REG = 37
+_BME680_GH3_REG = 38
 
 # BME680 register buffer index settings
-REG_FILTER_INDEX = 5
-REG_TEMP_INDEX = 4
-REG_PRES_INDEX = 4
-REG_HUM_INDEX = 2
-REG_NBCONV_INDEX = 1
-REG_RUN_GAS_INDEX = 1
-REG_HCTRL_INDEX = 0
+_BME680_REG_FILTER_INDEX = 5
+_BME680_REG_TEMP_INDEX = 4
+_BME680_REG_PRES_INDEX = 4
+_BME680_REG_HUM_INDEX = 2
+_BME680_REG_NBCONV_INDEX = 1
+_BME680_REG_RUN_GAS_INDEX = 1
+_BME680_REG_HCTRL_INDEX = 0
 
 # Ambient humidity shift value for compensation
-HUM_REG_SHIFT_VAL = 4
+_BME680_HUM_REG_SHIFT_VAL = 4
 
 # Delay related macro declaration
-RESET_PERIOD = 10
+_BME680_RESET_PERIOD = 10
 
 # SPI memory page settings
-MEM_PAGE0 = 0x10
-MEM_PAGE1 = 0x00
+_BME680_MEM_PAGE0 = 0x10
+_BME680_MEM_PAGE1 = 0x00
 
 # Run gas enable and disable settings
-RUN_GAS_DISABLE = 0
-RUN_GAS_ENABLE = 1
+_BME680_RUN_GAS_DISABLE = 0
+_BME680_RUN_GAS_ENABLE = 1
 
 # Buffer length macro declaration
-TMP_BUFFER_LENGTH = 40
-REG_BUFFER_LENGTH = 6
-FIELD_DATA_LENGTH = 3
-GAS_REG_BUF_LENGTH = 20
-GAS_HEATER_PROF_LEN_MAX  = 10
+_BME680_TMP_BUFFER_LENGTH = 40
+_BME680_REG_BUFFER_LENGTH = 6
+_BME680_FIELD_DATA_LENGTH = 3
+_BME680_GAS_REG_BUF_LENGTH = 20
+_BME680_GAS_HEATER_PROF_LEN_MAX  = 10
 
 # Settings selector
-OST_SEL = 1
-OSP_SEL = 2
-OSH_SEL = 4
-GAS_MEAS_SEL = 8
-FILTER_SEL = 16
-HCNTRL_SEL = 32
-RUN_GAS_SEL = 64
-NBCONV_SEL = 128
-GAS_SENSOR_SEL = GAS_MEAS_SEL | RUN_GAS_SEL | NBCONV_SEL
+_BME680_OST_SEL = 1
+_BME680_OSP_SEL = 2
+_BME680_OSH_SEL = 4
+_BME680_GAS_MEAS_SEL = 8
+_BME680_FILTER_SEL = 16
+_BME680_HCNTRL_SEL = 32
+_BME680_RUN_GAS_SEL = 64
+_BME680_NBCONV_SEL = 128
+_BME680_GAS_SENSOR_SEL = _BME680_GAS_MEAS_SEL | _BME680_RUN_GAS_SEL | _BME680_NBCONV_SEL
 
 # Number of conversion settings
-NBCONV_MIN = 0
-NBCONV_MAX = 9 # Was 10, but there are only 10 settings: 0 1 2 ... 8 9
+_BME680_NBCONV_MIN = 0
+_BME680_NBCONV_MAX = 9 # Was 10, but there are only 10 settings: 0 1 2 ... 8 9
 
 # Mask definitions
-GAS_MEAS_MSK = 0x30
-NBCONV_MSK = 0X0F
-FILTER_MSK = 0X1C
-OST_MSK = 0XE0
-OSP_MSK = 0X1C
-OSH_MSK = 0X07
-HCTRL_MSK = 0x08
-RUN_GAS_MSK = 0x10
-MODE_MSK = 0x03
-RHRANGE_MSK = 0x30
-RSERROR_MSK = 0xf0
-NEW_DATA_MSK = 0x80
-GAS_INDEX_MSK = 0x0f
-GAS_RANGE_MSK = 0x0f
-GASM_VALID_MSK = 0x20
-HEAT_STAB_MSK = 0x10
-MEM_PAGE_MSK = 0x10
-SPI_RD_MSK = 0x80
-SPI_WR_MSK = 0x7f
-BIT_H1_DATA_MSK = 0x0F
+_BME680_GAS_MEAS_MSK = 0x30
+_BME680_NBCONV_MSK = 0X0F
+_BME680_FILTER_MSK = 0X1C
+_BME680_OST_MSK = 0XE0
+_BME680_OSP_MSK = 0X1C
+_BME680_OSH_MSK = 0X07
+_BME680_HCTRL_MSK = 0x08
+_BME680_RUN_GAS_MSK = 0x10
+_BME680_MODE_MSK = 0x03
+_BME680_RHRANGE_MSK = 0x30
+_BME680_RSERROR_MSK = 0xf0
+_BME680_NEW_DATA_MSK = 0x80
+_BME680_GAS_INDEX_MSK = 0x0f
+_BME680_GAS_RANGE_MSK = 0x0f
+_BME680_GASM_VALID_MSK = 0x20
+_BME680_HEAT_STAB_MSK = 0x10
+_BME680_MEM_PAGE_MSK = 0x10
+_BME680_SPI_RD_MSK = 0x80
+_BME680_SPI_WR_MSK = 0x7f
+_BME680_BIT_H1_DATA_MSK = 0x0F
 
 # Bit position definitions for sensor settings
-GAS_MEAS_POS = 4
-FILTER_POS = 2
-OST_POS = 5
-OSP_POS = 2
-OSH_POS = 0
-RUN_GAS_POS = 4
-MODE_POS = 0
-NBCONV_POS = 0
+_BME680_GAS_MEAS_POS = 4
+_BME680_FILTER_POS = 2
+_BME680_OST_POS = 5
+_BME680_OSP_POS = 2
+_BME680_OSH_POS = 0
+_BME680_RUN_GAS_POS = 4
+_BME680_MODE_POS = 0
+_BME680_NBCONV_POS = 0
 
 # Look up tables for the possible gas range values
 lookupTable1 = [2147483647, 2147483647, 2147483647, 2147483647,
@@ -272,40 +289,40 @@ class CalibrationData:
 
     def set_from_array(self, calibration):
         # Temperature related coefficients
-        self.par_t1 = bytes_to_word(calibration[T1_MSB_REG], calibration[T1_LSB_REG])
-        self.par_t2 = bytes_to_word(calibration[T2_MSB_REG], calibration[T2_LSB_REG], bits=16, signed=True)
-        self.par_t3 = twos_comp(calibration[T3_REG], bits=8)
+        self.par_t1 = bytes_to_word(calibration[_BME680_T1_MSB_REG], calibration[_BME680_T1_LSB_REG])
+        self.par_t2 = bytes_to_word(calibration[_BME680_T2_MSB_REG], calibration[_BME680_T2_LSB_REG], bits=16, signed=True)
+        self.par_t3 = twos_comp(calibration[_BME680_T3_REG], bits=8)
 
         # Pressure related coefficients
-        self.par_p1 = bytes_to_word(calibration[P1_MSB_REG], calibration[P1_LSB_REG])
-        self.par_p2 = bytes_to_word(calibration[P2_MSB_REG], calibration[P2_LSB_REG], bits=16, signed=True)
-        self.par_p3 = twos_comp(calibration[P3_REG], bits=8)
-        self.par_p4 = bytes_to_word(calibration[P4_MSB_REG], calibration[P4_LSB_REG], bits=16, signed=True)
-        self.par_p5 = bytes_to_word(calibration[P5_MSB_REG], calibration[P5_LSB_REG], bits=16, signed=True)
-        self.par_p6 = twos_comp(calibration[P6_REG], bits=8)
-        self.par_p7 = twos_comp(calibration[P7_REG], bits=8)
-        self.par_p8 = bytes_to_word(calibration[P8_MSB_REG], calibration[P8_LSB_REG], bits=16, signed=True)
-        self.par_p9 = bytes_to_word(calibration[P9_MSB_REG], calibration[P9_LSB_REG], bits=16, signed=True)
-        self.par_p10 = calibration[P10_REG]
+        self.par_p1 = bytes_to_word(calibration[_BME680_P1_MSB_REG], calibration[_BME680_P1_LSB_REG])
+        self.par_p2 = bytes_to_word(calibration[_BME680_P2_MSB_REG], calibration[_BME680_P2_LSB_REG], bits=16, signed=True)
+        self.par_p3 = twos_comp(calibration[_BME680_P3_REG], bits=8)
+        self.par_p4 = bytes_to_word(calibration[_BME680_P4_MSB_REG], calibration[_BME680_P4_LSB_REG], bits=16, signed=True)
+        self.par_p5 = bytes_to_word(calibration[_BME680_P5_MSB_REG], calibration[_BME680_P5_LSB_REG], bits=16, signed=True)
+        self.par_p6 = twos_comp(calibration[_BME680_P6_REG], bits=8)
+        self.par_p7 = twos_comp(calibration[_BME680_P7_REG], bits=8)
+        self.par_p8 = bytes_to_word(calibration[_BME680_P8_MSB_REG], calibration[_BME680_P8_LSB_REG], bits=16, signed=True)
+        self.par_p9 = bytes_to_word(calibration[_BME680_P9_MSB_REG], calibration[_BME680_P9_LSB_REG], bits=16, signed=True)
+        self.par_p10 = calibration[_BME680_P10_REG]
 
         # Humidity related coefficients
-        self.par_h1 = (calibration[H1_MSB_REG] << HUM_REG_SHIFT_VAL) | (calibration[H1_LSB_REG] & BIT_H1_DATA_MSK)
-        self.par_h2 = (calibration[H2_MSB_REG] << HUM_REG_SHIFT_VAL) | (calibration[H2_LSB_REG] >> HUM_REG_SHIFT_VAL)
-        self.par_h3 = twos_comp(calibration[H3_REG], bits=8)
-        self.par_h4 = twos_comp(calibration[H4_REG], bits=8)
-        self.par_h5 = twos_comp(calibration[H5_REG], bits=8)
-        self.par_h6 = calibration[H6_REG]
-        self.par_h7 = twos_comp(calibration[H7_REG], bits=8)
+        self.par_h1 = (calibration[_BME680_H1_MSB_REG] << _BME680_HUM_REG_SHIFT_VAL) | (calibration[_BME680_H1_LSB_REG] & _BME680_BIT_H1_DATA_MSK)
+        self.par_h2 = (calibration[_BME680_H2_MSB_REG] << _BME680_HUM_REG_SHIFT_VAL) | (calibration[_BME680_H2_LSB_REG] >> _BME680_HUM_REG_SHIFT_VAL)
+        self.par_h3 = twos_comp(calibration[_BME680_H3_REG], bits=8)
+        self.par_h4 = twos_comp(calibration[_BME680_H4_REG], bits=8)
+        self.par_h5 = twos_comp(calibration[_BME680_H5_REG], bits=8)
+        self.par_h6 = calibration[_BME680_H6_REG]
+        self.par_h7 = twos_comp(calibration[_BME680_H7_REG], bits=8)
 
         # Gas heater related coefficients
-        self.par_gh1 = twos_comp(calibration[GH1_REG], bits=8)
-        self.par_gh2 = bytes_to_word(calibration[GH2_MSB_REG], calibration[GH2_LSB_REG], bits=16, signed=True)
-        self.par_gh3 = twos_comp(calibration[GH3_REG], bits=8)
+        self.par_gh1 = twos_comp(calibration[_BME680_GH1_REG], bits=8)
+        self.par_gh2 = bytes_to_word(calibration[_BME680_GH2_MSB_REG], calibration[_BME680_GH2_LSB_REG], bits=16, signed=True)
+        self.par_gh3 = twos_comp(calibration[_BME680_GH3_REG], bits=8)
 
     def set_other(self, heat_range, heat_value, sw_error):
-        self.res_heat_range = (heat_range & RHRANGE_MSK) // 16
+        self.res_heat_range = (heat_range & _BME680_RHRANGE_MSK) // 16
         self.res_heat_val = heat_value
-        self.range_sw_err = (sw_error & RSERROR_MSK) // 16
+        self.range_sw_err = (sw_error & _BME680_RSERROR_MSK) // 16
 
 # BME680 sensor settings structure which comprises of ODR,
 # over-sampling and filter settings.
@@ -365,7 +382,7 @@ class BME680Data:
         self.new_fields = None
 
 
-class BME680(BME680Data):
+class DFRobot_BME680(BME680Data):
     
     # Heater control settings
     ENABLE_HEATER = 0x00
@@ -398,7 +415,7 @@ class BME680(BME680Data):
     FORCED_MODE = 1
     
     
-    def __init__(self, i2c_addr = I2C_ADDR_SECONDARY, i2c_device = None):
+    def __init__(self, i2c_addr = _BME680_I2C_ADDR_SECONDARY, i2c_device = None):
         BME680Data.__init__(self)
 
         self.i2c_addr = i2c_addr
@@ -407,8 +424,8 @@ class BME680(BME680Data):
             import smbus
             self._i2c = smbus.SMBus(1)
 
-        self.chip_id = self._get_regs(CHIP_ID_ADDR, 1)
-        if self.chip_id != CHIP_ID:
+        self.chip_id = self._get_regs(_BME680_CHIP_ID_ADDR, 1)
+        if self.chip_id != _BME680_CHIP_ID:
             raise RuntimeError("BME680 Not Found. Invalid CHIP ID: 0x{0:02x}".format(self.chip_id))
 
         self.soft_reset()
@@ -425,19 +442,19 @@ class BME680(BME680Data):
         self.get_sensor_data()
 
     def _get_calibration_data(self):
-        calibration = self._get_regs(COEFF_ADDR1, COEFF_ADDR1_LEN)
-        calibration += self._get_regs(COEFF_ADDR2, COEFF_ADDR2_LEN)
+        calibration = self._get_regs(_BME680_COEFF_ADDR1, _BME680_COEFF_ADDR1_LEN)
+        calibration += self._get_regs(_BME680_COEFF_ADDR2, _BME680_COEFF_ADDR2_LEN)
 
-        heat_range = self._get_regs(ADDR_RES_HEAT_RANGE_ADDR, 1)
-        heat_value = twos_comp(self._get_regs(ADDR_RES_HEAT_VAL_ADDR, 1), bits=8)
-        sw_error = twos_comp(self._get_regs(ADDR_RANGE_SW_ERR_ADDR, 1), bits=8)
+        heat_range = self._get_regs(_BME680_ADDR_RES_HEAT_RANGE_ADDR, 1)
+        heat_value = twos_comp(self._get_regs(_BME680_ADDR_RES_HEAT_VAL_ADDR, 1), bits=8)
+        sw_error = twos_comp(self._get_regs(_BME680_ADDR_RANGE_SW_ERR_ADDR, 1), bits=8)
 
         self.calibration_data.set_from_array(calibration)
         self.calibration_data.set_other(heat_range, heat_value, sw_error)
 
     def soft_reset(self):
-        self._set_regs(SOFT_RESET_ADDR, SOFT_RESET_CMD) 
-        time.sleep(RESET_PERIOD / 1000.0)
+        self._set_regs(_BME680_SOFT_RESET_ADDR, _BME680_SOFT_RESET_CMD) 
+        time.sleep(0.01)
 
     def set_temp_offset(self, value):
         if value == 0:
@@ -447,68 +464,68 @@ class BME680(BME680Data):
 
     def set_humidity_oversample(self, value):
         self.tph_settings.os_hum = value
-        self._set_bits(CONF_OS_H_ADDR, OSH_MSK, OSH_POS, value)
+        self._set_bits(_BME680_CONF_OS_H_ADDR, _BME680_OSH_MSK, _BME680_OSH_POS, value)
 
     def get_humidity_oversample(self):
-        return (self._get_regs(CONF_OS_H_ADDR, 1) & OSH_MSK) >> OSH_POS
+        return (self._get_regs(_BME680_CONF_OS_H_ADDR, 1) & _BME680_OSH_MSK) >> OSH_POS
 
     def set_pressure_oversample(self, value):
         self.tph_settings.os_pres = value
-        self._set_bits(CONF_T_P_MODE_ADDR, OSP_MSK, OSP_POS, value)
+        self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_OSP_MSK, _BME680_OSP_POS, value)
 
     def get_pressure_oversample(self):
-        return (self._get_regs(CONF_T_P_MODE_ADDR, 1) & OSP_MSK) >> OSP_POS
+        return (self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1) & _BME680_OSP_MSK) >> OSP_POS
 
     def set_temperature_oversample(self, value):
         self.tph_settings.os_temp = value
-        self._set_bits(CONF_T_P_MODE_ADDR, OST_MSK, OST_POS, value)
+        self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_OST_MSK, _BME680_OST_POS, value)
 
     def get_temperature_oversample(self):
-        return (self._get_regs(CONF_T_P_MODE_ADDR, 1) & OST_MSK) >> OST_POS
+        return (self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1) & _BME680_OST_MSK) >> _BME680_OST_POS
 
     def set_filter(self, value):
         self.tph_settings.filter = value
-        self._set_bits(CONF_ODR_FILT_ADDR, FILTER_MSK, FILTER_POS, value)
+        self._set_bits(_BME680_CONF_ODR_FILT_ADDR, _BME680_FILTER_MSK, _BME680_FILTER_POS, value)
 
     def get_filter(self):
-        return (self._get_regs(CONF_ODR_FILT_ADDR, 1) & FILTER_MSK) >> FILTER_POS
+        return (self._get_regs(_BME680_CONF_ODR_FILT_ADDR, 1) & _BME680_FILTER_MSK) >> _BME680_FILTER_POS
 
     def select_gas_heater_profile(self, value):
-        if value > NBCONV_MAX or value < NBCONV_MIN:
-            raise ValueError("Profile '{}' should be between {} and {}".format(value, NBCONV_MIN, NBCONV_MAX))
+        if value > _BME680_NBCONV_MAX or value < _BME680_NBCONV_MIN:
+            raise ValueError("Profile '{}' should be between {} and {}".format(value, _BME680_NBCONV_MIN, _BME680_NBCONV_MAX))
 
         self.gas_settings.nb_conv = value
-        self._set_bits(CONF_ODR_RUN_GAS_NBC_ADDR, NBCONV_MSK, NBCONV_POS, value)
+        self._set_bits(_BME680_CONF_ODR_RUN_GAS_NBC_ADDR, _BME680_NBCONV_MSK, _BME680_NBCONV_POS, value)
 
     def get_gas_heater_profile(self):
-        return self._get_regs(CONF_ODR_RUN_GAS_NBC_ADDR, 1) & NBCONV_MSK
+        return self._get_regs(_BME680_CONF_ODR_RUN_GAS_NBC_ADDR, 1) & _BME680_NBCONV_MSK
 
     def set_gas_status(self, value):
         self.gas_settings.run_gas = value
-        self._set_bits(CONF_ODR_RUN_GAS_NBC_ADDR, RUN_GAS_MSK, RUN_GAS_POS, value)
+        self._set_bits(_BME680_CONF_ODR_RUN_GAS_NBC_ADDR, _BME680_RUN_GAS_MSK, _BME680_RUN_GAS_POS, value)
 
     def get_gas_status(self):
-        return (self._get_regs(CONF_ODR_RUN_GAS_NBC_ADDR, 1) & RUN_GAS_MSK) >> RUN_GAS_POS
+        return (self._get_regs(_BME680_CONF_ODR_RUN_GAS_NBC_ADDR, 1) & _BME680_RUN_GAS_MSK) >> _BME680_RUN_GAS_POS
 
     def set_gas_heater_profile(self, temperature, duration, nb_profile=0):
         self.set_gas_heater_temperature(temperature, nb_profile=nb_profile)
         self.set_gas_heater_duration(duration, nb_profile=nb_profile)
 
     def set_gas_heater_temperature(self, value, nb_profile=0):
-        if nb_profile > NBCONV_MAX or value < NBCONV_MIN:
-            raise ValueError("Profile '{}' should be between {} and {}".format(nb_profile, NBCONV_MIN, NBCONV_MAX))
+        if nb_profile > _BME680_NBCONV_MAX or value < _BME680_NBCONV_MIN:
+            raise ValueError("Profile '{}' should be between {} and {}".format(nb_profile, _BME680_NBCONV_MIN, _BME680_NBCONV_MAX))
 
         self.gas_settings.heatr_temp = value
         temp = int(self._calc_heater_resistance(self.gas_settings.heatr_temp))
-        self._set_regs(RES_HEAT0_ADDR + nb_profile, temp)
+        self._set_regs(_BME680_RES_HEAT0_ADDR + nb_profile, temp)
 
     def set_gas_heater_duration(self, value, nb_profile=0):
-        if nb_profile > NBCONV_MAX or value < NBCONV_MIN:
-            raise ValueError("Profile '{}' should be between {} and {}".format(nb_profile, NBCONV_MIN, NBCONV_MAX))
+        if nb_profile > _BME680_NBCONV_MAX or value < _BME680_NBCONV_MIN:
+            raise ValueError("Profile '{}' should be between {} and {}".format(nb_profile, _BME680_NBCONV_MIN, _BME680_NBCONV_MAX))
 
         self.gas_settings.heatr_dur = value
         temp = self._calc_heater_duration(self.gas_settings.heatr_dur)
-        self._set_regs(GAS_WAIT0_ADDR + nb_profile, temp)
+        self._set_regs(_BME680_GAS_WAIT0_ADDR + nb_profile, temp)
 
     def set_power_mode(self, value, blocking=True):
         if value not in (self.SLEEP_MODE, self.FORCED_MODE):
@@ -516,42 +533,42 @@ class BME680(BME680Data):
 
         self.power_mode = value
 
-        self._set_bits(CONF_T_P_MODE_ADDR, MODE_MSK, MODE_POS, value)
+        self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_MODE_MSK, _BME680_MODE_POS, value)
 
         while blocking and self.get_power_mode() != self.power_mode:
             time.sleep(0.01)
 
     def get_power_mode(self):
-        self.power_mode = self._get_regs(CONF_T_P_MODE_ADDR, 1)
+        self.power_mode = self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1)
         return self.power_mode
 
     def get_sensor_data(self):
         self.set_power_mode(self.FORCED_MODE)
 
         for attempt in range(10):
-            status = self._get_regs(FIELD0_ADDR, 1)
+            status = self._get_regs(_BME680_FIELD0_ADDR, 1)
 
-            if (status & NEW_DATA_MSK) == 0:
+            if (status & _BME680_NEW_DATA_MSK) == 0:
                 time.sleep(0.01)
                 continue
 
-            regs = self._get_regs(FIELD0_ADDR, FIELD_LENGTH)
+            regs = self._get_regs(_BME680_FIELD0_ADDR, _BME680_FIELD_LENGTH)
 
-            self.data.status = regs[0] & NEW_DATA_MSK
+            self.data.status = regs[0] & _BME680_NEW_DATA_MSK
             # Contains the nb_profile used to obtain the current measurement
-            self.data.gas_index = regs[0] & GAS_INDEX_MSK
+            self.data.gas_index = regs[0] & _BME680_GAS_INDEX_MSK
             self.data.meas_index = regs[1]
 
             adc_pres = (regs[2] << 12) | (regs[3] << 4) | (regs[4] >> 4)
             adc_temp = (regs[5] << 12) | (regs[6] << 4) | (regs[7] >> 4)
             adc_hum = (regs[8] << 8) | regs[9]
             adc_gas_res = (regs[13] << 2) | (regs[14] >> 6)
-            gas_range = regs[14] & GAS_RANGE_MSK
+            gas_range = regs[14] & _BME680_GAS_RANGE_MSK
 
-            self.data.status |= regs[14] & GASM_VALID_MSK
-            self.data.status |= regs[14] & HEAT_STAB_MSK
+            self.data.status |= regs[14] & _BME680_GASM_VALID_MSK
+            self.data.status |= regs[14] & _BME680_HEAT_STAB_MSK
 
-            self.data.heat_stable = (self.data.status & HEAT_STAB_MSK) > 0
+            self.data.heat_stable = (self.data.status & _BME680_HEAT_STAB_MSK) > 0
 
             temperature = self._calc_temperature(adc_temp)
             self.data.temperature = temperature / 100.0
