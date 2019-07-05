@@ -1,13 +1,13 @@
 '''
  MIT License
  Copyright (C) <2019> <@DFRobot luoyufeng>
-　Permission is hereby granted, free of charge, to any person obtaining a copy of this
-　software and associated documentation files (the "Software"), to deal in the Software
-　without restriction, including without limitation the rights to use, copy, modify,
-　merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-　permit persons to whom the Software is furnished to do so.
-　The above copyright notice and this permission notice shall be included in all copies or
-　substantial portions of the Software.
+ Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ software and associated documentation files (the "Software"), to deal in the Software
+ without restriction, including without limitation the rights to use, copy, modify,
+ merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so.
+ The above copyright notice and this permission notice shall be included in all copies or
+ substantial portions of the Software.
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
  PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
@@ -467,14 +467,14 @@ class DFRobot_BME680(BME680Data):
         self._set_bits(_BME680_CONF_OS_H_ADDR, _BME680_OSH_MSK, _BME680_OSH_POS, value)
 
     def get_humidity_oversample(self):
-        return (self._get_regs(_BME680_CONF_OS_H_ADDR, 1) & _BME680_OSH_MSK) >> OSH_POS
+        return (self._get_regs(_BME680_CONF_OS_H_ADDR, 1) & _BME680_OSH_MSK) >> _BME680_OSH_POS
 
     def set_pressure_oversample(self, value):
         self.tph_settings.os_pres = value
         self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_OSP_MSK, _BME680_OSP_POS, value)
 
     def get_pressure_oversample(self):
-        return (self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1) & _BME680_OSP_MSK) >> OSP_POS
+        return (self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1) & _BME680_OSP_MSK) >> _BME680_OSP_POS
 
     def set_temperature_oversample(self, value):
         self.tph_settings.os_temp = value
@@ -527,7 +527,7 @@ class DFRobot_BME680(BME680Data):
         temp = self._calc_heater_duration(self.gas_settings.heatr_dur)
         self._set_regs(_BME680_GAS_WAIT0_ADDR + nb_profile, temp)
 
-    def set_power_mode(self, value, blocking=True):
+    def set_power_mode(self, value):
         if value not in (self.SLEEP_MODE, self.FORCED_MODE):
             print("Power mode should be one of SLEEP_MODE or FORCED_MODE")
 
@@ -535,8 +535,6 @@ class DFRobot_BME680(BME680Data):
 
         self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_MODE_MSK, _BME680_MODE_POS, value)
 
-        while blocking and self.get_power_mode() != self.power_mode:
-            time.sleep(0.01)
 
     def get_power_mode(self):
         self.power_mode = self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1)
