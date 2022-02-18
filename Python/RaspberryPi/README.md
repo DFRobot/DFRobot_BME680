@@ -97,7 +97,26 @@ $> python read_all_data.py
     def select_gas_heater_profile(self, value)
 ```
 
+## Compatibility
+
+| 主板         | 通过 | 未通过 | 未测试 | 备注 |
+| ------------ | :--: | :----: | :----: | :--: |
+| RaspberryPi2 |      |        |   √    |      |
+| RaspberryPi3 |      |        |   √    |      |
+| RaspberryPi4 |  √   |        |        |      |
+
+* Python 版本
+
+| Python  | 通过 | 未通过 | 未测试 | 备注 |
+| ------- | :--: | :----: | :----: | ---- |
+| Python2 |  √   |        |        |      |
+| Python3 |     |        |    √    |      |
+
+## History
+
+- 2017/12/04 - Version 2.0.0 released.
+- 2017/09/04 - Version 1.0.0 released.
 
 ## Credits
 
-author [luoyufeng yufeng.luo@dfrobot.com]
+Written by luoyufeng(yufeng.luo@dfrobot.com), 2017. (Welcome to our [website](https://www.dfrobot.com/))

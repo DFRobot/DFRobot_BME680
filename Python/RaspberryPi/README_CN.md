@@ -115,11 +115,14 @@ python demo_read_all_data.py
 
 ## 历史
 
-- 2022/02/09 - 1.0.0 版本
+- 2017/12/04 - 2.0.0 版本
+- 2017/09/04 - 1.0.0 版本
 
 ## 创作者
 
-Written by Arya(xue.peng@dfrobot.com), 2022. (Welcome to our [website](https://www.dfrobot.com/))
+Written by luoyufeng(yufeng.luo@dfrobot.com), 2017. (Welcome to our [website](https://www.dfrobot.com/))
+
+
 
 
 
