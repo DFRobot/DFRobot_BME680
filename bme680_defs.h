@@ -1,57 +1,15 @@
 /**
- * Copyright (C) 2017 - 2018 Bosch Sensortec GmbH
+ * @file bme680_defs.h
+ * @brief Sensor driver for BME680 sensor.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * Neither the name of the copyright holder nor the names of the
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER
- * OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- *
- * The information provided is believed to be accurate and reliable.
- * The copyright holder assumes no responsibility
- * for the consequences of use
- * of such information nor for any infringement of patents or
- * other rights of third parties which may result from its use.
- * No license is granted by implication or otherwise under any patent or
- * patent rights of the copyright holder.
- *
- * @file    bme680_defs.h
- * @date	30 Oct 2017
- * @version	3.5.3
- * @brief
- *
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author Frank(jiehan.guo@dfrobot.com)
+ * @version  V1.0
+ * @date  2017-12-04
+ * @url https://github.com/DFRobot/DFRobot_BME680
  */
 
-/*! @file bme680_defs.h
- @brief Sensor driver for BME680 sensor */
-/*!
- * @defgroup BME680 SENSOR API
- * @brief
- * @{*/
 #ifndef BME680_DEFS_H_
 #define BME680_DEFS_H_
 
@@ -327,186 +285,133 @@
 				(data & bitname##_MSK))
 #define BME680_GET_BITS_POS_0(reg_data, bitname)  (reg_data & (bitname##_MSK))
 
-/** Type definitions */
-/*
- * Generic communication function pointer
- * @param[in] dev_id: Place holder to store the id of the device structure
- *                    Can be used to store the index of the Chip select or
- *                    I2C address of the device.
- * @param[in] reg_addr:	Used to select the register the where data needs to
+/**
+ * @fn bme680_com_fptr_t
+ * @brief Generic communication function pointer
+ * @param dev_id: Place holder to store the id of the device structure
+ * @n                 Can be used to store the index of the Chip select or
+ * @n                 I2C address of the device.
+ * @param reg_addr:	Used to select the register the where data needs to
  *                      be read from or written to.
- * @param[in/out] reg_data: Data array to read/write
- * @param[in] len: Length of the data array
+ * @param data: Data array to read/write
+ * @param len: Length of the data array
+ * @return int8_t type
  */
 typedef int8_t (*bme680_com_fptr_t)(uint8_t dev_id, uint8_t reg_addr, uint8_t *data, uint16_t len);
 
-/*
- * Delay function pointer
+/**
+ * @fn bme680_delay_fptr_t
+ * @brief Delay function pointer
  * @param[in] period: Time period in milliseconds
  */
 typedef void (*bme680_delay_fptr_t)(uint32_t period);
 
-/*!
+/**
+ * @enum bme680_intf
  * @brief Interface selection Enumerations
  */
 enum bme680_intf {
-	/*! SPI interface */
+	
 	BME680_SPI_INTF,
-	/*! I2C interface */
-	BME680_I2C_INTF
+	BME680_I2C_INTF /**< I2C interface */
 };
 
-/* structure definitions */
-/*!
+/**
+ * @struct bme680_field_data
  * @brief Sensor field data structure
  */
 struct	bme680_field_data {
-	/*! Contains new_data, gasm_valid & heat_stab */
-	uint8_t status;
-	/*! The index of the heater profile used */
-	uint8_t gas_index;
-	/*! Measurement index to track order */
-	uint8_t meas_index;
-	/*! Temperature in degree celsius x100 */
-	int16_t temperature;
-	/*! Pressure in Pascal */
-	uint32_t pressure;
-	/*! Humidity in % relative humidity x1000 */
-	uint32_t humidity;
-	/*! Gas resistance in Ohms */
-	uint32_t gas_resistance;
+	uint8_t status;          /**< Contains new_data, gasm_valid & heat_stab */
+	uint8_t gas_index;       /**< The index of the heater profile used */
+	uint8_t meas_index;      /**< Measurement index to track order */
+	int16_t temperature;     /**< Temperature in degree celsius x100 */
+	uint32_t pressure;       /**< Pressure in Pascal */
+	uint32_t humidity;       /**< Humidity in % relative humidity x1000 */
+	uint32_t gas_resistance; /**< Gas resistance in Ohms */
 };
 
-/*!
+/**
+ * @struct bme680_calib_data
  * @brief Structure to hold the Calibration data
  */
 struct	bme680_calib_data {
-	/*! Variable to store calibrated humidity data */
-	uint16_t par_h1;
-	/*! Variable to store calibrated humidity data */
-	uint16_t par_h2;
-	/*! Variable to store calibrated humidity data */
-	int8_t par_h3;
-	/*! Variable to store calibrated humidity data */
-	int8_t par_h4;
-	/*! Variable to store calibrated humidity data */
-	int8_t par_h5;
-	/*! Variable to store calibrated humidity data */
-	uint8_t par_h6;
-	/*! Variable to store calibrated humidity data */
-	int8_t par_h7;
-	/*! Variable to store calibrated gas data */
-	int8_t par_gh1;
-	/*! Variable to store calibrated gas data */
-	int16_t par_gh2;
-	/*! Variable to store calibrated gas data */
-	int8_t par_gh3;
-	/*! Variable to store calibrated temperature data */
-	uint16_t par_t1;
-	/*! Variable to store calibrated temperature data */
-	int16_t par_t2;
-	/*! Variable to store calibrated temperature data */
-	int8_t par_t3;
-	/*! Variable to store calibrated pressure data */
-	uint16_t par_p1;
-	/*! Variable to store calibrated pressure data */
-	int16_t par_p2;
-	/*! Variable to store calibrated pressure data */
-	int8_t par_p3;
-	/*! Variable to store calibrated pressure data */
-	int16_t par_p4;
-	/*! Variable to store calibrated pressure data */
-	int16_t par_p5;
-	/*! Variable to store calibrated pressure data */
-	int8_t par_p6;
-	/*! Variable to store calibrated pressure data */
-	int8_t par_p7;
-	/*! Variable to store calibrated pressure data */
-	int16_t par_p8;
-	/*! Variable to store calibrated pressure data */
-	int16_t par_p9;
-	/*! Variable to store calibrated pressure data */
-	uint8_t par_p10;
-	/*! Variable to store t_fine size */
-	int32_t t_fine;
-	/*! Variable to store heater resistance range */
-	uint8_t res_heat_range;
-	/*! Variable to store heater resistance value */
-	int8_t res_heat_val;
-	/*! Variable to store error range */
-	int8_t range_sw_err;
+	
+	uint16_t par_h1; /**< Variable to store calibrated humidity data */
+	uint16_t par_h2; /**< Variable to store calibrated humidity data */
+	int8_t par_h3;   /**< Variable to store calibrated humidity data */
+	int8_t par_h4;   /**< Variable to store calibrated humidity data */
+	int8_t par_h5;   /**< Variable to store calibrated humidity data */
+	uint8_t par_h6;  /**< Variable to store calibrated humidity data */
+	int8_t par_h7;   /**< Variable to store calibrated humidity data */
+	int8_t par_gh1;  /**< Variable to store calibrated gas data */
+	int16_t par_gh2; /**< Variable to store calibrated gas data */
+	int8_t par_gh3;  /**< Variable to store calibrated gas data */
+	uint16_t par_t1; /**< Variable to store calibrated temperature data */
+	int16_t par_t2;  /**< Variable to store calibrated temperature data */
+	int8_t par_t3;   /**< Variable to store calibrated temperature data */
+	uint16_t par_p1; /**< Variable to store calibrated pressure data */
+	int16_t par_p2;  /**< Variable to store calibrated pressure data */
+	int8_t par_p3;   /**< Variable to store calibrated pressure data */
+	int16_t par_p4;  /**< Variable to store calibrated pressure data */
+	int16_t par_p5;  /**< Variable to store calibrated pressure data */
+	int8_t par_p6;   /**< Variable to store calibrated pressure data */
+	int8_t par_p7;   /**< Variable to store calibrated pressure data */
+	int16_t par_p8;  /**< Variable to store calibrated pressure data */
+	int16_t par_p9;  /**< Variable to store calibrated pressure data */
+	uint8_t par_p10; /**< Variable to store calibrated pressure data */
+	int32_t t_fine;  /**< Variable to store t_fine size */
+	uint8_t res_heat_range;/**< Variable to store heater resistance range */
+	int8_t res_heat_val;   /**< Variable to store heater resistance value */
+	int8_t range_sw_err;   /**< Variable to store error range */
 };
 
-/*!
+/**
+ * @struct bme680_tph_sett
  * @brief BME680 sensor settings structure which comprises of ODR,
  * over-sampling and filter settings.
  */
 struct	bme680_tph_sett {
-	/*! Humidity oversampling */
-	uint8_t os_hum;
-	/*! Temperature oversampling */
-	uint8_t os_temp;
-	/*! Pressure oversampling */
-	uint8_t os_pres;
-	/*! Filter coefficient */
-	uint8_t filter;
+	uint8_t os_hum; /**< Humidity oversampling */
+	uint8_t os_temp;/**< Temperature oversampling */
+	uint8_t os_pres;/**< Pressure oversampling */
+	uint8_t filter; /**< Filter coefficient */
 };
 
-/*!
+/**
+ * @struct bme680_gas_sett
  * @brief BME680 gas sensor which comprises of gas settings
  *  and status parameters
  */
 struct	bme680_gas_sett {
-	/*! Variable to store nb conversion */
-	uint8_t nb_conv;
-	/*! Variable to store heater control */
-	uint8_t heatr_ctrl;
-	/*! Run gas enable value */
-	uint8_t run_gas;
-	/*! Pointer to store heater temperature */
-	uint16_t heatr_temp;
-	/*! Pointer to store duration profile */
-	uint16_t heatr_dur;
+	uint8_t nb_conv;    /**< Variable to store nb conversion */
+	uint8_t heatr_ctrl; /**< Variable to store heater control */
+	uint8_t run_gas;    /**< Run gas enable value */
+	uint16_t heatr_temp;/**< Pointer to store heater temperature */
+	uint16_t heatr_dur; /**< Pointer to store duration profile */
 };
 
-/*!
+/**
+ * @struct bme680_dev
  * @brief BME680 device structure
  */
 struct	bme680_dev {
-	/*! Chip Id */
-	uint8_t chip_id;
-	/*! Device Id */
-	uint8_t dev_id;
-	/*! SPI/I2C interface */
-	enum bme680_intf intf;
-	/*! Memory page used */
-	uint8_t mem_page;
-	/*! Ambient temperature in Degree C*/
-	int8_t amb_temp;
-	/*! Sensor calibration data */
-	struct bme680_calib_data calib;
-	/*! Sensor settings */
-	struct bme680_tph_sett tph_sett;
-	/*! Gas Sensor settings */
-	struct bme680_gas_sett gas_sett;
-	/*! Sensor power modes */
-	uint8_t power_mode;
-	/*! New sensor fields */
-	uint8_t new_fields;
-	/*! Store the info messages */
-	uint8_t info_msg;
-	/*! Burst read structure */
-	bme680_com_fptr_t read;
-	/*! Burst write structure */
-	bme680_com_fptr_t write;
-	/*! Delay in ms */
-	bme680_delay_fptr_t delay_ms;
-	/*! Communication function result */
-	int8_t com_rslt;
+	uint8_t chip_id;                 /**< Chip Id */
+	uint8_t dev_id;                  /**< Device Id */
+	enum bme680_intf intf;           /**< SPI/I2C interface */
+	uint8_t mem_page;                /**< Memory page used */
+	int8_t amb_temp;                 /**< Ambient temperature in Degree C*/
+	struct bme680_calib_data calib;  /**< Sensor calibration data */
+	struct bme680_tph_sett tph_sett; /**< Sensor settings */
+	struct bme680_gas_sett gas_sett; /**< Gas Sensor settings */
+	uint8_t power_mode;              /**< Sensor power modes */
+	uint8_t new_fields;              /**< New sensor fields */
+	uint8_t info_msg;                /**< Store the info messages */
+	bme680_com_fptr_t read;          /**< Burst read structure */
+	bme680_com_fptr_t write;         /**< Burst write structure */
+	bme680_delay_fptr_t delay_ms;    /**< Delay in ms */
+	int8_t com_rslt;                 /**< Communication function result */
 };
 
 
 
-#endif /* BME680_DEFS_H_ */
-/** @}*/
-/** @}*/
+#endif 

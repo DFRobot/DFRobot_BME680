@@ -1,18 +1,16 @@
-/*
- * file DFRobot_BME680_I2C.ino
+/*!
+ * @file IAQ_SPI.ino
+ * @brief Connect bme680 4 wires SPI interface with your board (please reference board compatibility).
+ * @n BME680 cs pin connect to D3 on esp8266 and esp32 board, on AVR board is IO 3.
+ * @n Temprature, Humidity, pressure, altitude, calibrated altitude, gas resistance and IAQ data will be printed via serial.
+ * @note This demo only support ESP8266 MCU
  *
- * @ https://github.com/DFRobot/DFRobot_BME680
- *
- * Connect bme680 4 wires SPI interface with your board (please reference board compatibility).
- * BME680 cs pin connect to D3 on esp8266 and esp32 board, on AVR board is IO 3.
- *
- * Temprature, Humidity, pressure, altitude, calibrated altitude, gas resistance and IAQ data will be printed via serial.
- *
- * Copyright   [DFRobot](http://www.dfrobot.com), 2016
- * Copyright   GNU Lesser General Public License
- *
- * version  V1.0
- * date  2017-12-7
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author [Frank](jiehan.guo@dfrobot.com) 
+ * @version  V1.0
+ * @date  2017-12-7
+ * @url https://github.com/DFRobot/DFRobot_BME680
  */
 
 #include "DFRobot_BME680_SPI.h"

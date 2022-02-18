@@ -1,19 +1,21 @@
+# -*- coding:utf-8 -*-
+from __future__ import print_function
+
+
+'''!
+  @file DFRobot_BME680.py
+  @brief BME680 is an integrated environmental sensor developed specifically for mobile applications and wearables 
+  @n where size and low power consumption are key requirements. Expanding Bosch Sensortec’s existing family of environmental sensors, 
+  @n the BME680 integrates for the first time individual high linearity and high accuracy sensors for gas, pressure, humidity and temperature.
+  @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+  @license     The MIT License (MIT)
+  @author [Frank](jiehan.guo@dfrobot.com)
+  @version  V1.0
+  @date  2022-02-09
+  @url https://github.com/DFRobot/DFRobot_AHT20
 '''
- MIT License
- Copyright (C) <2019> <@DFRobot luoyufeng>
- Permission is hereby granted, free of charge, to any person obtaining a copy of this
- software and associated documentation files (the "Software"), to deal in the Software
- without restriction, including without limitation the rights to use, copy, modify,
- merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
- permit persons to whom the Software is furnished to do so.
- The above copyright notice and this permission notice shall be included in all copies or
- substantial portions of the Software.
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
- PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
- FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+
+
 
 import time
 import smbus
@@ -463,6 +465,10 @@ class DFRobot_BME680(BME680Data):
             self.offset_temp_in_t_fine = int(math.copysign((((int(abs(value) * 100)) << 8) - 128) / 5, value))
 
     def set_humidity_oversample(self, value):
+        '''!
+          @brief Set humidity oversampling
+          @param value   Oversampling value, OS_NONE, OS_1X, OS_2X, OS_4X, OS_8X, OS_16X
+        '''
         self.tph_settings.os_hum = value
         self._set_bits(_BME680_CONF_OS_H_ADDR, _BME680_OSH_MSK, _BME680_OSH_POS, value)
 
@@ -470,6 +476,10 @@ class DFRobot_BME680(BME680Data):
         return (self._get_regs(_BME680_CONF_OS_H_ADDR, 1) & _BME680_OSH_MSK) >> _BME680_OSH_POS
 
     def set_pressure_oversample(self, value):
+        '''!
+          @brief Set temperature oversampling
+          @param value   Oversampling value, OS_NONE, OS_1X, OS_2X, OS_4X, OS_8X, OS_16X
+        '''
         self.tph_settings.os_pres = value
         self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_OSP_MSK, _BME680_OSP_POS, value)
 
@@ -477,6 +487,10 @@ class DFRobot_BME680(BME680Data):
         return (self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1) & _BME680_OSP_MSK) >> _BME680_OSP_POS
 
     def set_temperature_oversample(self, value):
+        '''!
+          @brief Set pressure oversampling
+          @param Oversampling value: OS_NONE, OS_1X, OS_2X, OS_4X, OS_8X, OS_16X
+        '''
         self.tph_settings.os_temp = value
         self._set_bits(_BME680_CONF_T_P_MODE_ADDR, _BME680_OST_MSK, _BME680_OST_POS, value)
 
@@ -484,6 +498,18 @@ class DFRobot_BME680(BME680Data):
         return (self._get_regs(_BME680_CONF_T_P_MODE_ADDR, 1) & _BME680_OST_MSK) >> _BME680_OST_POS
 
     def set_filter(self, value):
+        '''!
+          @brief Set IIR filter size to remove short term fluctuations from the temperature and pressure readings
+          @param  increasing resolution but reducing bandwidth
+                  FILTER_SIZE_0
+                  FILTER_SIZE_1
+                  FILTER_SIZE_3
+                  FILTER_SIZE_7
+                  FILTER_SIZE_15
+                  FILTER_SIZE_31
+                  FILTER_SIZE_63
+                  FILTER_SIZE_127
+        '''
         self.tph_settings.filter = value
         self._set_bits(_BME680_CONF_ODR_FILT_ADDR, _BME680_FILTER_MSK, _BME680_FILTER_POS, value)
 
@@ -491,6 +517,10 @@ class DFRobot_BME680(BME680Data):
         return (self._get_regs(_BME680_CONF_ODR_FILT_ADDR, 1) & _BME680_FILTER_MSK) >> _BME680_FILTER_POS
 
     def select_gas_heater_profile(self, value):
+        '''!
+          @brief Set current gas sensor conversion profile
+          @param value:current gas sensor conversion profile: 0 ~ 9
+        '''
         if value > _BME680_NBCONV_MAX or value < _BME680_NBCONV_MIN:
             raise ValueError("Profile '{}' should be between {} and {}".format(value, _BME680_NBCONV_MIN, _BME680_NBCONV_MAX))
 
@@ -501,6 +531,10 @@ class DFRobot_BME680(BME680Data):
         return self._get_regs(_BME680_CONF_ODR_RUN_GAS_NBC_ADDR, 1) & _BME680_NBCONV_MSK
 
     def set_gas_status(self, value):
+        '''!
+          @brief Enable/disable gas sensor
+          @param 1 for enable and 0 for disable
+        '''
         self.gas_settings.run_gas = value
         self._set_bits(_BME680_CONF_ODR_RUN_GAS_NBC_ADDR, _BME680_RUN_GAS_MSK, _BME680_RUN_GAS_POS, value)
 
@@ -512,6 +546,10 @@ class DFRobot_BME680(BME680Data):
         self.set_gas_heater_duration(duration, nb_profile=nb_profile)
 
     def set_gas_heater_temperature(self, value, nb_profile=0):
+        '''!
+          @brief Set gas sensor heater temperature
+          @param value:target temperature in degrees celsius, between 200 ~ 400
+        '''
         if nb_profile > _BME680_NBCONV_MAX or value < _BME680_NBCONV_MIN:
             raise ValueError("Profile '{}' should be between {} and {}".format(nb_profile, _BME680_NBCONV_MIN, _BME680_NBCONV_MAX))
 
@@ -520,6 +558,10 @@ class DFRobot_BME680(BME680Data):
         self._set_regs(_BME680_RES_HEAT0_ADDR + nb_profile, temp)
 
     def set_gas_heater_duration(self, value, nb_profile=0):
+        '''!
+          @brief Set gas sensor heater duration
+          @param value:target duration in milliseconds, between 1 ~ 4032
+        '''
         if nb_profile > _BME680_NBCONV_MAX or value < _BME680_NBCONV_MIN:
             raise ValueError("Profile '{}' should be between {} and {}".format(nb_profile, _BME680_NBCONV_MIN, _BME680_NBCONV_MAX))
 

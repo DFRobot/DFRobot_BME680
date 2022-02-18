@@ -1,15 +1,20 @@
+# -*- coding:utf-8 -*-
+from __future__ import print_function
+
+
+'''!
+  @file demo_read_all_data.py
+  @brief connect bme680 I2C interface with your board (please reference board compatibility)
+  @n Temprature, Humidity, pressure, altitude, calibrate altitude and gas resistance data will print on serial window.
+  @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+  @license     The MIT License (MIT)
+  @author [Frank](jiehan.guo@dfrobot.com)
+  @version  V1.0
+  @date  2019-7-2
+  @url https://github.com/DFRobot/DFRobot_BME680
 '''
-file read_all_data.py
 
-connect bme680 I2C interface with your board (please reference board compatibility)
-Temprature, Humidity, pressure, altitude, calibrate altitude and gas resistance data will print on serial window.
 
-Copyright   [DFRobot](http://www.dfrobot.com), 2016
-Copyright   GNU Lesser General Public License
-
-version  V1.0
-date  2019-7-2
-'''
 import sys
 sys.path.append('../')
 from DFRobot_BME680 import DFRobot_BME680

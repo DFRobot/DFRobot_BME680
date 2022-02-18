@@ -1,44 +1,12 @@
-/**\mainpage
- * Copyright (C) 2017 - 2018 Bosch Sensortec GmbH
+/**
+ * @file DFRobot_BME680.h
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * Neither the name of the copyright holder nor the names of the
- * contributors may be used to endorse or promote products derived from
- * this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER
- * OR CONTRIBUTORS BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
- *
- * The information provided is believed to be accurate and reliable.
- * The copyright holder assumes no responsibility
- * for the consequences of use
- * of such information nor for any infringement of patents or
- * other rights of third parties which may result from its use.
- * No license is granted by implication or otherwise under any patent or
- * patent rights of the copyright holder.
- *
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author Frank(jiehan.guo@dfrobot.com)
+ * @version  V1.0
+ * @date  2017-12-04
+ * @url https://github.com/DFRobot/DFRobot_BME680
  */
 
 #ifndef DFROBOT_BME680_H
@@ -86,27 +54,113 @@ typedef enum {
                         
 class DFRobot_BME680
 {
-  public:
-    DFRobot_BME680(bme680_com_fptr_t readReg, bme680_com_fptr_t writeReg, bme680_delay_fptr_t delayMS, eBME680_INTERFACE interface);
-
-    uint8_t       bme680_I2CAddr = 0;
-
-    int16_t       begin(void);
-    void          update(void);
-    int8_t        iaqUpdate(void);
-    void          startConvert(void);
-    float         readTemperature(void);
-    float         readPressure(void);
-    float         readHumidity(void);
-    float         readAltitude(void);
-    float         readCalibratedAltitude(float seaLevel);
-    float         readGasResistance(void);
-    float         readSeaLevel(float altitude);
-    float         readIAQ(void);
-    
-    void          setParam(eBME680_param_t eParam, uint8_t dat);
-    void          setGasHeater(uint16_t temp, uint16_t t);
-    uint8_t       isIAQReady(void);
+public:
+  DFRobot_BME680(bme680_com_fptr_t readReg, bme680_com_fptr_t writeReg, bme680_delay_fptr_t delayMS, eBME680_INTERFACE interface);
+  uint8_t bme680_I2CAddr = 0;
+  /**
+   * @fn begin
+   * @brief begin BME680 device
+   * @return result
+   * @retval  non-zero : falid
+   * @retval  0        : succussful
+   */
+  int16_t begin(void);
+  /**
+   * @fn update
+   * @brief update all data to MCU ram
+   */
+  void    update(void);
+  /**
+   * @fn iaqUpdate
+   * @brief update all data to MCU ram with IAQ (only for esp8266 now)
+   *
+   * @return result:
+   * @retval 0 :complete
+   * @retval 1 :busy
+   */
+  int8_t  iaqUpdate(void);
+  /**
+   * @fn startConvert
+   * @brief start convert to get a accurate values
+   */
+  void  startConvert(void);
+  /**
+   * @fn readTemperature
+   * @brief read the temperature value (unit C)
+   *
+   * @return temperature valu, this value has two decimal points
+   */
+  float readTemperature(void);
+  /**
+   * @fn readPressure
+   * @brief read the pressure value (unit pa)
+   *
+   * @return pressure value, this value has two decimal points
+   */
+  float readPressure(void);
+  /**
+   * @fn readHumidity
+   * @brief read the humidity value (unit %rh)
+   * @return humidity value, this value has two decimal points
+   */
+  float readHumidity(void);
+  /**
+   * @fn readAltitude
+   * @brief read the altitude (unit meter)
+   * @return altitude value, this value has two decimal points
+   */
+  float readAltitude(void);
+  /**
+   * @fn readCalibratedAltitude
+   * @brief read the Calibrated altitude (unit meter)
+   *
+   * @param seaLevel  normalised atmospheric pressure
+   *
+   * @return calibrated altitude value , this value has two decimal points
+   */
+  float readCalibratedAltitude(float seaLevel);
+  /**
+   * @fn readGasResistance
+   * @brief read the gas resistance(unit ohm)
+   * @return temperature value, this value has two decimal points
+   */
+  float readGasResistance(void);
+  /**
+   * @fn readSeaLevel
+   * @brief read normalised atmospheric pressure (unit pa)
+   * @param altitude   accurate altitude for normalising
+   * @return normalised atmospheric pressure
+   */
+  float readSeaLevel(float altitude);
+  /**
+   * @fn readIAQ
+   * @brief read IAQ
+   * @return The result of IAQ
+   */
+  float readIAQ(void);
+  /**
+   * @fn setParam
+   * @brief set bme680 parament
+   *
+   * @param eParam        :which param you want to change
+   *        dat           :object data, can't more than 5
+   */  
+  void    setParam(eBME680_param_t eParam, uint8_t dat);
+  /**
+   * @fn setGasHeater
+   * @brief set bme680 gas heater
+   * @param temp        :your object temp
+   * @param t           :time spend in milliseconds
+   */
+   void    setGasHeater(uint16_t temp, uint16_t t);
+  /**
+   * @fn isIAQReady
+   * @brief check IAQ ready
+   * @return result:
+   * @retval 0 :ready
+   * @retval 1 :not ready
+   */
+  uint8_t isIAQReady(void);
   
   private:
     void          writeParamHelper(uint8_t reg, uint8_t dat, uint8_t addr);

@@ -1,17 +1,14 @@
-/*
- * file DFRobot_BME680_I2C.ino
+/*!
+ * @file DFRobot_BME680_I2C.ino
+ * @brief connect bme680 I2C interface with your board (please reference board compatibility)
+ * @n Temprature, Humidity, pressure, altitude, calibrate altitude and gas resistance data will print on serial window.
  *
- * @ https://github.com/DFRobot/DFRobot_BME680
- *
- * connect bme680 I2C interface with your board (please reference board compatibility)
- *
- * Temprature, Humidity, pressure, altitude, calibrate altitude and gas resistance data will print on serial window.
- *
- * Copyright   [DFRobot](http://www.dfrobot.com), 2016
- * Copyright   GNU Lesser General Public License
- *
- * version  V1.0
- * date  2017-12-7
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author [Frank](jiehan.guo@dfrobot.com)
+ * @version  V1.0
+ * @date  2017-12-7
+ * @url https://github.com/DFRobot/DFRobot_BME680
  */
 
 #include "DFRobot_BME680_I2C.h"

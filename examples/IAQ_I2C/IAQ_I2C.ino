@@ -1,17 +1,15 @@
-/*
- * file DFRobot_BME680_I2C.ino
+/*!
+ * @file IAQ_I2C.ino
+ * @brief connect bme680 I2C interface with your board (please reference board compatibility)
+ * @n Temprature, Humidity, pressure, altitude, calibrated altitude, gas resistance and IAQ data will be printed via serial.
+ * @note This demo only support ESP8266 MCU
  *
- * @ https://github.com/DFRobot/DFRobot_BME680
- *
- * connect bme680 I2C interface with your board (please reference board compatibility)
- *
- * Temprature, Humidity, pressure, altitude, calibrated altitude, gas resistance and IAQ data will be printed via serial.
- *
- * Copyright   [DFRobot](http://www.dfrobot.com), 2016
- * Copyright   GNU Lesser General Public License
- *
- * version  V1.0
- * date  2017-12-7
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author [Frank](jiehan.guo@dfrobot.com)
+ * @version  V1.0
+ * @date  2017-12-7
+ * @url https://github.com/DFRobot/DFRobot_BME680
  */
  
 #include "DFRobot_BME680_I2C.h"

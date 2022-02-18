@@ -1,24 +1,31 @@
-# BME680
+# DFRobot_BME680
+
+* [中文版](./README_CN.md)
+
 BME680 is an integrated environmental sensor developed specifically for mobile applications and wearables 
 where size and low power consumption are key requirements. Expanding Bosch Sensortec’s existing family of environmental sensors, 
 the BME680 integrates for the first time individual high linearity and high accuracy sensors for gas, pressure, humidity and temperature.
 
-![SVG1](https://raw.githubusercontent.com/DFRobot/binaryfiles/master/SEN0248/SEN0248svg1.png)
+![产品效果图](./resources/images/SEN0248.png) 
 
-## DFRobot_BME680 Library for Arduino
----------------------------------------------------------
-Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C over SPI.Reads temperature, humidity, gas, IAQ(details in examples\readme), pressure and calculates altitude.
+
+
+## Product Link（[https://www.dfrobot.com/product-1697.html](https://www.dfrobot.com/product-1697.html)）
+    SKU: SEN0248
+    
 
 ## Table of Contents
 
+* [Summary](#summary)
 * [Installation](#installation)
 * [Methods](#methods)
-
+* [Compatibility](#compatibility)
 * [History](#history)
 * [Credits](#credits)
-* [Compatibility](#compatibility)
-<snippet>
-<content>
+
+## Summary
+Provides an Arduino library for reading and interpreting Bosch BME680 data over I2C over SPI.Reads temperature, humidity, gas, IAQ(details in examples\readme), pressure and calculates altitude.
+
 
 ## Installation
 
@@ -28,133 +35,110 @@ Download the zip file first to use this library and uncompress it to a folder na
 ## Methods
 
 ```C++
-
-#include <DFRobot_BME680_SPI.h>  //
-#include <DFRobot_BME680_I2C.h>  //choose at least one
-
-DFRobot_BME680_I2C bme(I2C_address);
-DFRobot_BME680_SPI bme(pin_cs);
-
-
-/*
- * @brief begin BME680 device
- *
- * @return result
- *    ture : falid
- *    false : succussful
- */
-boolean begin(void);
-
-/*
- * @brief start convert to get a accurate values
- */
-void startConvert(void);
-
-/*
- * @brief update all data to MCU ram
- */
-void update(void);
-
-/*
- * @brief update all data to MCU ram with IAQ (only for esp8266 now)
- *
- * @return result:
- *         0 :complete
- *         1 :busy
- */
-int8_t iaqUpdate(void);
-
-/*
- * @brief check IAQ ready
- *
- * @return result:
- *         0 :ready
- *         1 :not ready
- */
-uint8_t isIAQReady(void);
-
-/*
- * @brief read the temperature value (unit ℃)
- *
- * @return temperature value, this value has two decimal points
- */
-float readTempture(void);
-
-/*
- * @brief read the humidity value (unit %rh)
- *
- * @return humidity value, this value has two decimal points
- */
-float readHumidity(void);
-
-/*
- * @brief read the pressure value (unit pa)
- *
- * @return pressure value, this value has two decimal points
- */
-float readPressure(void);
-
-/*
- * @brief read the altitude (unit meter)
- *
- * @return altitude value, this value has two decimal points
- */
-float readAltitude(void);
-
-/*
- * @brief read the gas resistance(unit ohm)
- *
- * @return temperature value, this value has two decimal points
- */
-float readGasResistance(void);
-
-/*
- * @brief read normalised atmospheric pressure (unit pa)
- *
- * @param altitude   accurate altitude for normalising
- * 
- * @return normalised atmospheric pressure
- */
-float readSeaLevel(float altitude);
-
-/*
- * @brief read the Calibrated altitude (unit meter)
- *
- * @param seaLevelPressure  normalised atmospheric pressure
- *
- * @return calibrated altitude value , this value has two decimal points
- */
-float readCalibratedAltitude(float seaLevelPressure);
-
-#define BME680_OS_NONE		UINT8_C(0)
-#define BME680_OS_1X		UINT8_C(1)
-#define BME680_OS_2X		UINT8_C(2)
-#define BME680_OS_4X		UINT8_C(3)
-#define BME680_OS_8X		UINT8_C(4)
-#define BME680_OS_16X		UINT8_C(5)
-
-typedef enum {
-  eBME680_PARAM_TEMPSAMP,
-  eBME680_PARAM_HUMISAMP,
-  eBME680_PARAM_PREESAMP,
-  eBME680_PARAM_IIRSIZE
-} eBME680_param_t;
-
-/*
- * @brief set bme680 parament
- *
- * @param eParam        :which param you want to change
- *        dat           :object data, can't more than 5
- */
-void setParam(eBME680_param_t eParam, uint8_t dat);
-
-/*
- * @brief set bme680 gas heater
- *
- * @param temp        :your object temp
- *        t           :time spend in milliseconds
- */
-void setGasHeater(uint16_t temp, uint16_t t);
+  /**
+   * @fn begin
+   * @brief begin BME680 device
+   * @return result
+   * @retval  non-zero : falid
+   * @retval  0        : succussful
+   */
+  int16_t begin(void);
+  /**
+   * @fn update
+   * @brief update all data to MCU ram
+   */
+  void    update(void);
+  /**
+   * @fn iaqUpdate
+   * @brief update all data to MCU ram with IAQ (only for esp8266 now)
+   *
+   * @return result:
+   * @retval 0 :complete
+   * @retval 1 :busy
+   */
+  int8_t  iaqUpdate(void);
+  /**
+   * @fn startConvert
+   * @brief start convert to get a accurate values
+   */
+  void  startConvert(void);
+  /**
+   * @fn readTemperature
+   * @brief read the temperature value (unit C)
+   *
+   * @return temperature valu, this value has two decimal points
+   */
+  float readTemperature(void);
+  /**
+   * @fn readPressure
+   * @brief read the pressure value (unit pa)
+   *
+   * @return pressure value, this value has two decimal points
+   */
+  float readPressure(void);
+  /**
+   * @fn readHumidity
+   * @brief read the humidity value (unit %rh)
+   * @return humidity value, this value has two decimal points
+   */
+  float readHumidity(void);
+  /**
+   * @fn readAltitude
+   * @brief read the altitude (unit meter)
+   * @return altitude value, this value has two decimal points
+   */
+  float readAltitude(void);
+  /**
+   * @fn readCalibratedAltitude
+   * @brief read the Calibrated altitude (unit meter)
+   *
+   * @param seaLevel  normalised atmospheric pressure
+   *
+   * @return calibrated altitude value , this value has two decimal points
+   */
+  float readCalibratedAltitude(float seaLevel);
+  /**
+   * @fn readGasResistance
+   * @brief read the gas resistance(unit ohm)
+   * @return temperature value, this value has two decimal points
+   */
+  float readGasResistance(void);
+  /**
+   * @fn readSeaLevel
+   * @brief read normalised atmospheric pressure (unit pa)
+   * @param altitude   accurate altitude for normalising
+   * @return normalised atmospheric pressure
+   */
+  float readSeaLevel(float altitude);
+  /**
+   * @fn readIAQ
+   * @brief read IAQ
+   * @return The result of IAQ
+   */
+  float readIAQ(void);
+  /**
+   * @fn setParam
+   * @brief set bme680 parament
+   *
+   * @param eParam        :which param you want to change
+   *        dat           :object data, can't more than 5
+   */  
+  void    setParam(eBME680_param_t eParam, uint8_t dat);
+  /**
+   * @fn setGasHeater
+   * @brief set bme680 gas heater
+   * @param temp        :your object temp
+   * @param t           :time spend in milliseconds
+   */
+   void    setGasHeater(uint16_t temp, uint16_t t);
+  /**
+   * @fn isIAQReady
+   * @brief check IAQ ready
+   * @return result:
+   * @retval 0 :ready
+   * @retval 1 :not ready
+   */
+  uint8_t isIAQReady(void);
 
 ```
 
@@ -170,9 +154,9 @@ Arduino leonardo |      √       |             |            |
 
 ## History
 
-- Dec 4, 2017 - Version 2.0.0 released.
-- Sep 4, 2017 - Version 1.0.0 released.
+- 2017/12/04 - Version 2.0.0 released.
+- 2017/09/04 - Version 1.0.0 released.
 
 ## Credits
 
-Written by DFRobot_xiaowo, 2017. (Welcome to our [website](https://www.dfrobot.com/))
+Written by Frank(jiehan.guo@dfrobot.com), 2017. (Welcome to our [website](https://www.dfrobot.com/))

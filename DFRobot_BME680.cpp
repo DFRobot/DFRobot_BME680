@@ -1,3 +1,13 @@
+/**
+ * @file DFRobot_BME680.cpp
+ *
+ * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
+ * @license     The MIT License (MIT)
+ * @author Frank(jiehan.guo@dfrobot.com)
+ * @version  V1.0
+ * @date  2017-12-04
+ * @url https://github.com/DFRobot/DFRobot_BME680
+ */
 #include "DFRobot_BME680.h"
 
 static struct        bme680_dev bme680_sensor;
