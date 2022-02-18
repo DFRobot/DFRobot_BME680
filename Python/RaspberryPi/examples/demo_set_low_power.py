@@ -8,7 +8,7 @@ from __future__ import print_function
   @n You can set sensor low power mode or wake up mode.
   @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
   @license     The MIT License (MIT)
-  @author [Frank](jiehan.guo@dfrobot.com)
+  @author [luoyufeng](yufeng.luo@dfrobot.com) 
   @version  V1.0
   @date  2019-7-2
   @url https://github.com/DFRobot/DFRobot_BME680

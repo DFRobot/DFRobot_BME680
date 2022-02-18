@@ -9,10 +9,10 @@ from __future__ import print_function
   @n the BME680 integrates for the first time individual high linearity and high accuracy sensors for gas, pressure, humidity and temperature.
   @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
   @license     The MIT License (MIT)
-  @author [Frank](jiehan.guo@dfrobot.com)
+  @author [luoyufeng](yufeng.luo@dfrobot.com) 
   @version  V1.0
   @date  2022-02-09
-  @url https://github.com/DFRobot/DFRobot_AHT20
+  @url https://github.com/DFRobot/DFRobot_BME680
 '''
 
 
